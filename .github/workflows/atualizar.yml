@@ -46,6 +46,13 @@ jobs:
           pip install -r requirements.txt
           python -m playwright install --with-deps chromium
 
+      - name: Completar a cadeia de certificados da Câmara
+        run: |
+          pipeline/montar_certificados.sh "$RUNNER_TEMP/ca-camara.pem" | tee "$RUNNER_TEMP/certs.log"
+          echo "REQUESTS_CA_BUNDLE=$RUNNER_TEMP/ca-camara.pem" >> "$GITHUB_ENV"
+          echo "CURL_CA_BUNDLE=$RUNNER_TEMP/ca-camara.pem" >> "$GITHUB_ENV"
+          echo "::notice title=certificados::$(tr '\n' ' ' < "$RUNNER_TEMP/certs.log")"
+
       - name: Testar acesso aos servidores da Câmara
         timeout-minutes: 4
         run: |
