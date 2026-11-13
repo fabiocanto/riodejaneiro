@@ -24,7 +24,7 @@ permissions:
 
 concurrency:
   group: atualizar-site
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   atualizar:
@@ -46,6 +46,23 @@ jobs:
           pip install -r requirements.txt
           python -m playwright install --with-deps chromium
 
+      - name: Testar acesso aos servidores da Câmara
+        timeout-minutes: 3
+        run: |
+          {
+            echo '## Acesso aos servidores da Câmara'
+            echo '| endereço | resposta |'; echo '|---|---|'
+          } >> "$GITHUB_STEP_SUMMARY"
+          FALHOU=0
+          for U in "https://www.camara.rio/includes_php/vereadores_frequencia_excel.php?ano=2026&mes=10" \
+                   "https://aplicnt.camara.rj.gov.br/APL/Legislativos/scpro.nsf/Internet/LeiInt?OpenForm&Start=1&Count=3" \
+                   "https://aplicnt.camara.rj.gov.br/APL/Legislativos/discvot.nsf/anoint?OpenForm&Start=1&Count=20&ExpandView"; do
+            R=$(curl -sS -m 25 -o /dev/null -w "HTTP %{http_code} em %{time_total}s" -A "riodejaneiro-dados/1.0" "$U" 2>&1 || true)
+            echo "| ${U%%\?*} | $R |" >> "$GITHUB_STEP_SUMMARY"
+            case "$R" in "HTTP 200"*) ;; *) FALHOU=1 ;; esac
+          done
+          if [ "$FALHOU" = 1 ]; then echo "A Câmara não respondeu normalmente a este servidor do GitHub." | tee -a "$GITHUB_STEP_SUMMARY"; exit 1; fi
+
       - name: Testes dos leitores
         run: python tests/test_parsers.py
 
@@ -56,12 +73,15 @@ jobs:
           cp baseline/votos_cache.json raw/votos_cache.json
 
       - name: Coletar presença (faltas por mês)
+        timeout-minutes: 15
         run: python pipeline/collect_presenca.py raw/presenca.json
 
       - name: Coletar propostas
+        timeout-minutes: 45
         run: python pipeline/collect_props.py baseline/canon.json raw/props.json raw/props_estat.json
 
       - name: Coletar votações
+        timeout-minutes: 45
         run: python pipeline/collect_votos.py baseline/canon.json raw/votos_cache.json raw/votos.json
 
       - name: Conferir a coleta (trava de qualidade)

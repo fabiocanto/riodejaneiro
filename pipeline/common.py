@@ -9,17 +9,17 @@ UA = "riodejaneiro-dados/1.0 (+https://github.com/fabiocanto/riodejaneiro; leitu
 def sessao():
     s = requests.Session()
     s.headers['User-Agent'] = UA
-    r = Retry(total=5, backoff_factor=1.5, status_forcelist=(429, 500, 502, 503, 504), allowed_methods=("GET",))
+    r = Retry(total=3, connect=2, read=2, backoff_factor=1.5, status_forcelist=(429, 500, 502, 503, 504), allowed_methods=("GET",))
     s.mount('https://', HTTPAdapter(max_retries=r, pool_maxsize=16))
     return s
 
 
-def get(s, url, tries=4):
+def get(s, url, tries=3):
     """GET com tentativas; devolve texto. Levanta erro se não conseguir (a coleta então falha e não publica)."""
     last = None
     for k in range(tries):
         try:
-            r = s.get(url, timeout=60)
+            r = s.get(url, timeout=(10, 45))
             if r.status_code == 200:
                 return decodificar(r.content)
             last = 'HTTP %s' % r.status_code
