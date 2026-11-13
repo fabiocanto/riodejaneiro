@@ -49,7 +49,8 @@ def codigo(titulo):
 
 
 def nomes(s):
-    return [x.strip() for x in re.split(r',\s*|\s+e\s+', s.strip()) if x.strip()]
+    s = re.sub(r'\b[Ee]?\s*(?:a|o|as|os)?\s*Senhor(?:es|a|as)?\s+Vereador(?:es|a|as)?\b', ',', s)
+    return [x.strip() for x in re.split(r',\s*|\s+[eE]\s+', s.strip()) if x.strip()]
 
 
 CL = r'Senhor\w*\s+Vereador\w*\s+(.+?)\s+(\d+)\s*\('
@@ -79,7 +80,9 @@ def parse_doc(html_text, idx):
             else: k = 'A'; lista, decl = mm.group(1), int(mm.group(2))
             ns = nomes(lista)
             ids = [idx.get(norm_name(ALIAS.get(norm_name(n), n))) for n in ns]
-            if len(ns) != decl or None in ids: r['ok'] = False
+            if len(ns) != decl or None in ids:
+                r['ok'] = False
+                r.setdefault('motivo', []).append('%s: %d nomes para %d declarados; desconhecidos=%s' % (k, len(ns), decl, [n for n, i in zip(ns, ids) if i is None]))
             r[k] += [i for i in ids if i is not None]
     if not achou or not r['date']: r['ok'] = False
     return r
@@ -103,15 +106,19 @@ def main(canon_path, cache_path, saida, hoje=None):
     with ThreadPoolExecutor(8) as ex:
         for i, r in zip(pend, ex.map(lambda i: parse_doc(get(sess, DOC % i), idx), pend)):
             cache[i] = r
-    docs, dropped = [], 0
+    docs, dropped, debug = [], 0, []
     for i, d in lista:
         r = cache.get(i)
         if not r: continue
-        if not r['ok']: dropped += 1; continue
+        if not r['ok']:
+            dropped += 1
+            debug.append({'id': i, 'code': r.get('code'), 'date': r.get('date'), 'motivo': r.get('motivo', ['sem data' if not r.get('date') else 'sem blocos de votos'])})
+            continue
         docs.append({'id': i, 'code': '' if r['code'] == '?' else r['code'], 'date': r['date'], 'veto': r['veto'],
                      'S': sorted(set(r['S'])), 'N': sorted(set(r['N'])), 'A': sorted(set(r['A']))})
     json.dump(cache, open(cache_path, 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
     json.dump({'docs': docs, 'dropped': dropped, 'listados': len(lista)}, open(saida, 'w', encoding='utf-8'), ensure_ascii=False)
+    json.dump(debug[:150], open(saida.replace('.json', '_debug.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     print('votações nominais:', len(docs), '| descartadas:', dropped)
 
 
