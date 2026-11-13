@@ -5,6 +5,9 @@ name: Atualizar site
 # Se a conferência reprovar, NADA é publicado: o site continua na última versão boa
 # e este fluxo fica vermelho (o GitHub avisa por e-mail).
 on:
+  push:                       # mudou o código do robô => roda uma vez para provar que continua funcionando
+    branches: [main]
+    paths: ['.github/workflows/**', 'pipeline/**', 'tests/**']
   schedule:
     - cron: '17 5 * * *'
   workflow_dispatch:
