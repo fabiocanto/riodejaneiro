@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>O que cada vereador do Rio fez — dados oficiais</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:#1a1a1a;font:17px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+a{color:#0b4fa3}
+a:visited{color:#5b3a9e}
+header,main,footer{max-width:720px;margin:0 auto;padding:0 16px}
+header{padding-top:20px;padding-bottom:8px}
+h1{font-size:1.5rem;line-height:1.25;margin:0 0 6px}
+h2{font-size:1.25rem;margin:28px 0 8px;line-height:1.3}
+h3{font-size:1.05rem;margin:20px 0 6px}
+.muted{color:#555;font-size:.92rem}
+.box{border:1px solid #cfcfcf;border-radius:8px;padding:12px 14px;margin:14px 0;background:#fff}
+.box h2,.box h3{margin-top:0}
+input[type=search]{width:100%;font-size:1.05rem;padding:12px;border:1px solid #888;border-radius:8px;margin:8px 0 4px}
+ul.list{list-style:none;margin:0;padding:0}
+ul.list li{border-bottom:1px solid #e3e3e3}
+ul.list a{display:block;padding:13px 4px;text-decoration:none;color:#0b4fa3;font-size:1.05rem}
+button.link,button.tab{font:inherit;cursor:pointer}
+button.link{background:none;border:0;color:#0b4fa3;text-decoration:underline;padding:6px 0}
+.back{display:inline-block;margin:14px 0 4px;padding:8px 0}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th,td{border-bottom:1px solid #e3e3e3;padding:7px 4px;text-align:left;vertical-align:top}
+th{font-weight:600;background:#fafafa}
+td.n,th.n{text-align:right;white-space:nowrap}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card{border:1px solid #cfcfcf;border-radius:8px;padding:10px 12px}
+.card .big{font-size:1.7rem;font-weight:700;line-height:1.1}
+.card .big a{text-decoration:none}
+.card .lab{font-size:.9rem;color:#444}
+details{border:1px solid #cfcfcf;border-radius:8px;padding:8px 12px;margin:10px 0}
+summary{cursor:pointer;font-weight:600;padding:4px 0}
+.tabs{display:flex;gap:6px;margin:14px 0 0;border-bottom:2px solid #ddd}
+button.tab{flex:1;padding:11px 4px;border:0;background:#fff;border-bottom:3px solid transparent;margin-bottom:-2px;font-size:1rem;color:#1a1a1a}
+button.tab[aria-selected=true]{border-bottom-color:#0b4fa3;font-weight:700}
+.row{padding:10px 0;border-bottom:1px solid #e3e3e3}
+.row .t{font-weight:600}
+.pill{display:inline-block;border:1px solid #999;border-radius:12px;padding:0 9px;font-size:.88rem;margin-left:6px;white-space:nowrap}
+footer{padding-bottom:40px;margin-top:30px;border-top:1px solid #ddd;padding-top:14px;font-size:.92rem}
+.hide{display:none}
+.ement{text-transform:lowercase}.ement::first-letter{text-transform:uppercase}
+input.f{width:100%;font-size:1rem;padding:10px;border:1px solid #888;border-radius:8px;margin:8px 0}
+@media (max-width:420px){body{font-size:16.5px}.cards{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1>O que cada vereador do Rio fez</h1>
+  <p class="muted" style="margin:0">Dados oficiais da Câmara Municipal do Rio de Janeiro, de {{PERIODO}}. Coletados em {{DATA}}. Cada número tem um link para a fonte.</p>
+</header>
+<main id="app"></main>
+<footer>
+  <p><strong>Sobre este site.</strong> Ele só reúne dados publicados pela Câmara em <a href="https://www.camara.rio">camara.rio</a>. Não dá nota, não compara vereadores e não opina. Pode haver erros de leitura: confira sempre no link oficial.</p>
+  <p class="muted" id="foot-notes"></p>
+</footer>
+<script>
+/*DATA*/
+</script>
+<script>
+(function(){
+var URL_FREQ="https://www.camara.rio/atividade-parlamentar/plenario/frequencia-dos-vereadores";
+var URL_VOT="https://www.camara.rio/atividade-parlamentar/plenario/discursos-e-votacoes";
+var URL_GLOS="https://www.camara.rio/comunicacao/sala-de-imprensa-2/glossario-legislativo-2";
+var PL="https://www.camara.rio/atividade-parlamentar/processo-legislativo/";
+var DOCB="https://aplicnt.camara.rj.gov.br/APL/Legislativos/";
+var T=[ // [chave, página oficial, nome simples, explicação]
+ ["pl","pl","Projetos de lei","Propostas para criar ou mudar uma lei da cidade."],
+ ["plc","plc","Projetos de lei complementar","Propostas de lei sobre regras mais amplas da cidade (por exemplo, regras de construção e de uso do solo)."],
+ ["pelom","pelom","Mudanças na Lei Orgânica","Propostas para mudar a Lei Orgânica, que é como a “constituição” do município."],
+ ["pdl","pdl","Decretos legislativos","Decisões da Câmara que não viram lei, como entrega de medalhas e títulos."],
+ ["pr","pr","Resoluções","Regras sobre o funcionamento interno da Câmara."],
+ ["ind","indicacoes","Sugestões à Prefeitura (“indicações”)","O vereador sugere ao prefeito que faça alguma coisa, como consertar uma rua."],
+ ["moc","mocoes","Mensagens de aplauso, pesar ou protesto (“moções”)","Manifestações da Câmara, como parabenizar alguém ou lamentar um fato."],
+ ["ri","reqinf","Pedidos de informação à Prefeitura","O vereador pede dados ou explicações a órgãos da Prefeitura."],
+ ["rq","req","Outros pedidos feitos na Câmara (“requerimentos”)","Pedidos feitos dentro da própria Câmara."]
+];
+var NAMES=D.canon,N=NAMES.length;
+function nice(s){var small={"DA":1,"DE":1,"DO":1,"DOS":1,"DAS":1,"E":1};
+ return s.toLowerCase().split(" ").map(function(w,i){if(small[w.toUpperCase()]&&i>0)return w;if(w==="mst")return "MST";if(w==="dr.")return "Dr.";return w.charAt(0).toUpperCase()+w.slice(1)}).join(" ")}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function norm(s){return s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase()}
+function A(u,t){return '<a href="'+u+'" target="_blank" rel="noopener">'+t+'</a>'}
+var months=D.months;
+var mnames=["","jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+var pres=D.pres.map(function(l){return l.split(",").map(function(c){if(c===".")return null;var p=c.split("/");return[+p[0],+p[1]]})});
+function isCurrent(i){return pres[i][months.length-1]!==null}
+// votos
+function dec(s){var o=[],m,re=/([SNA-])(\d*)/g;while((m=re.exec(s))){var n=m[2]===""?1:+m[2];for(var k=0;k<n;k++)o.push(m[1])}return o}
+var rows=D.rows.map(function(r){var p=r.split("|");return{code:p[0]==="?"?"":p[0],date:p[1],id:p[2],veto:p[3]==="1"}});
+var votes=D.V.map(dec);
+function docUrl(id){return DOCB+"discvot.nsf/5d50d39bd976391b83256536006a2502/"+id+"?OpenDocument"}
+function pdocUrl(u){return DOCB+"scpro.nsf/8446f2be3d9bb8730325863200569352/"+u+"?OpenDocument"}
+var order=NAMES.map(function(n,i){return i}).sort(function(a,b){return NAMES[a].localeCompare(NAMES[b],"pt")});
+var app=document.getElementById("app");
+function sumP(i,from,to){var f=0,a=0;for(var k=from;k<=to;k++){var c=pres[i][k];if(c){f+=c[0];a+=c[1]}}return[f,a,f-a]}
+function yearIdx(y){var a=[],b=[];months.forEach(function(m,k){if(m[0]===y)a.push(k)});return[a[0],a[a.length-1]]}
+function home(){
+ var cur=order.filter(isCurrent),old=order.filter(function(i){return!isCurrent(i)});
+ var h='<div class="box"><h2>Como ler</h2><p style="margin:0 0 8px">Escolha um vereador na lista. Você verá três coisas, tiradas dos registros da Câmara:</p><ul style="margin:0 0 8px;padding-left:20px"><li><strong>Faltas</strong>: quantas vezes faltou às sessões, mês a mês.</li><li><strong>Propostas</strong>: o que apresentou, em palavras simples.</li><li><strong>Votos</strong>: como votou quando o voto de cada um foi registrado.</li></ul><p class="muted" style="margin:0">A ordem das listas é sempre alfabética. Este site não faz ranking nem avalia ninguém.</p></div>';
+ h+='<a href="#busca" style="display:block;border:2px solid #0b4fa3;border-radius:8px;padding:14px;margin:14px 0;text-decoration:none"><strong>Buscar por bairro ou rua →</strong><br><span class="muted">Veja tudo o que foi pedido para o seu bairro ou rua e por quem.</span></a>';
+ h+='<label for="q"><strong>Procurar vereador</strong></label><input id="q" type="search" placeholder="Digite o nome" autocomplete="off">';
+ h+='<ul class="list" id="lst"></ul>';
+ h+='<details><summary>Ex-vereadores e suplentes que aparecem nos dados ('+old.length+')</summary><p class="muted">Nomes que constam nas listas oficiais do período, mas que não estavam na lista de {{ULTIMO_MES}}.</p><ul class="list" id="lst2"></ul></details>';
+ h+='<details><summary>O que este site não mostra</summary><ul style="padding-left:20px"><li>A Câmara não publica a presença em cada sessão. Só publica o número de faltas por mês.</li><li>Na maior parte das votações, o plenário vota por “votação simbólica”: ninguém registra o voto de cada vereador. Só as votações nominais aparecem aqui.</li><li>Quando o nome de um vereador não está na lista de uma votação, o site escreve “não consta na lista”. Os registros não dizem o motivo.</li><li>'+D.dropped+' votações nominais foram deixadas de fora porque a lista de nomes não bateu com o total de votos informado no texto oficial.</li><li>Os votos em que um vereador pediu para registrar sua posição numa votação simbólica não estão nesta primeira versão.</li><li>A Câmara não tinha tabela de faltas publicada para estes meses, e por isso eles ficam de fora: {{MESES_SEM}}.</li></ul></details>';
+ app.innerHTML=h;
+ function fill(el,arr){el.innerHTML=arr.map(function(i){return '<li><a href="#v'+i+'">'+esc(nice(NAMES[i]))+'</a></li>'}).join("")}
+ var l1=document.getElementById("lst"),l2=document.getElementById("lst2");
+ fill(l1,cur);fill(l2,old);
+ document.getElementById("q").addEventListener("input",function(e){var q=norm(e.target.value.trim());
+  fill(l1,cur.filter(function(i){return norm(NAMES[i]).indexOf(q)>-1}));
+  fill(l2,old.filter(function(i){return norm(NAMES[i]).indexOf(q)>-1}));
+  if(q){l2.parentNode.open=true}});
+ window.scrollTo(0,0);
+}
+function exportUrl(m){return "https://www.camara.rio/includes_php/vereadores_frequencia_excel.php?ano="+m[0]+"&mes="+m[1]}
+function secPres(i){
+ var y25=yearIdx(2025),y26=yearIdx(2026),t25=sumP(i,y25[0],y25[1]),t26=sumP(i,y26[0],y26[1]);
+ var h='<p class="muted">“Sem justificativa” são as faltas que a Câmara não aceitou como justificadas. “Justificadas” são as faltas aceitas (abonadas). Clique em cada número para ver a tabela do mês no site da Câmara.</p>';
+ h+='<table><thead><tr><th>Período</th><th class="n">Faltas</th><th class="n">Justificadas</th><th class="n">Sem justif.</th></tr></thead><tbody>';
+ h+='<tr><td>2025 (fev–dez)</td><td class="n">'+A(URL_FREQ,t25[0])+'</td><td class="n">'+A(URL_FREQ,t25[1])+'</td><td class="n">'+A(URL_FREQ,t25[2])+'</td></tr>';
+ h+='<tr><td>2026 (mar–out)</td><td class="n">'+A(URL_FREQ,t26[0])+'</td><td class="n">'+A(URL_FREQ,t26[1])+'</td><td class="n">'+A(URL_FREQ,t26[2])+'</td></tr></tbody></table>';
+ h+='<p class="muted">Soma dos meses abaixo. Os totais levam à página de frequência da Câmara, onde se escolhe o mês.</p>';
+ h+='<details><summary>Mês a mês</summary><table><thead><tr><th>Mês</th><th class="n">Faltas</th><th class="n">Justif.</th><th class="n">Sem justif.</th></tr></thead><tbody>';
+ for(var k=months.length-1;k>=0;k--){var m=months[k],c=pres[i][k],u=exportUrl(m);
+  h+='<tr><td>'+mnames[m[1]]+'/'+m[0]+'</td>';
+  if(c){h+='<td class="n">'+A(u,c[0])+'</td><td class="n">'+A(u,c[1])+'</td><td class="n">'+A(u,c[0]-c[1])+'</td>'}
+  else h+='<td colspan="3" class="muted">não consta na tabela do mês</td>';
+  h+='</tr>'}
+ h+='</tbody></table></details>';
+ return h}
+var GK=['bairro','perguntas','homenagem','lei','outros'];
+var cache={};
+function loadP(i){if(!cache[i])cache[i]=fetch('data/v'+i+'.json').then(function(r){if(!r.ok)throw new Error(r.status);return r.json()});return cache[i]}
+function mountGroups(i){
+ app.querySelectorAll('details.gd').forEach(function(d){var k=+d.dataset.k,body=d.querySelector('.gbody'),done=false;
+  d.addEventListener('toggle',function(){if(!d.open||done)return;done=true;
+   loadP(i).then(function(all){var L=all[GK[k]]||[],shown=0,q='';
+    body.className='gbody';body.innerHTML='<input class="f" type="search" placeholder="Procurar nestas propostas" aria-label="Procurar"><div class="gl"></div><p><button class="link more">Mostrar mais</button></p>';
+    var gl=body.querySelector('.gl'),mb=body.querySelector('.more'),inp=body.querySelector('input'),F=L;
+    function more(){var end=Math.min(F.length,shown+30),h='';for(var j=shown;j<end;j++){var r=F[j];h+='<div class="row"><div class="t">'+(r[1]?A(DOCB+'scpro.nsf/'+r[1]+'?OpenDocument',esc(r[0])):esc(r[0]))+'</div><div class="ement">'+(r[2]?esc(r[2]):'(a lista oficial não traz texto)')+'</div></div>'}gl.insertAdjacentHTML('beforeend',h);shown=end;mb.style.display=shown>=F.length?'none':''}
+    inp.addEventListener('input',function(){q=norm(inp.value.trim());F=q?L.filter(function(r){return norm(r[2]+' '+r[0]).indexOf(q)>-1}):L;gl.innerHTML='';shown=0;if(!F.length){gl.innerHTML='<p class="muted">Nada encontrado.</p>'}more()});
+    mb.onclick=more;more()}).catch(function(){done=false;body.textContent='Não foi possível carregar as propostas agora. Tente de novo.'})})})}
+var GR=[
+ ["Pedidos de melhoria nos bairros","indicacoes","Toda “indicação”: o vereador pede ao prefeito um serviço ou obra (tapar buraco, podar árvore, consertar ralo, criar uma quadra)."],
+ ["Perguntas e cobranças","reqinf","Todo “pedido de informação” à Prefeitura, mais os requerimentos cujo texto pede informações, esclarecimentos, dados ou relatórios."],
+ ["Homenagens","mocoes","Moções de congratulações, louvor, aplauso, reconhecimento ou pesar; decretos que dão título ou medalha; projetos que dão nome a rua ou lugar ou criam dia, semana ou data no calendário; requerimentos de homenagem."],
+ ["Propostas de lei","pl","Projetos de lei, de lei complementar e de mudança da Lei Orgânica que não sejam nome de lugar nem data comemorativa."],
+ ["Outros","pdl","O que não entrou nos grupos acima: moções de repúdio ou protesto, decretos legislativos que não dão título (como sustar ato do prefeito), resoluções e requerimentos sem pedido de informação."]];
+function secProps(i){
+ var g=(D.groups[i]||"").split(" ").map(function(x){var p=x.split("/");return[+p[0],+p[1]]});
+ var h='<p class="muted">Cada proposta cai em um só grupo, pela mesma regra para todos os vereadores (veja “Como agrupamos”). Números pelo ano da proposta. Se há vários autores, a proposta conta para cada um. Clique no número para abrir a lista oficial.</p>';
+ h+='<table><thead><tr><th>Grupo</th><th class="n">2025</th><th class="n">2026</th></tr></thead><tbody>';
+ GR.forEach(function(t,k){var u=PL+t[1],c=g[k]||[0,0];
+  h+='<tr><td><strong>'+t[0]+'</strong></td><td class="n">'+A(u,c[0])+'</td><td class="n">'+A(u,c[1])+'</td></tr>'});
+ h+='</tbody></table>';
+ h+='<h3>Ler proposta por proposta</h3><p class="muted">Abra um grupo. Cada número leva ao texto da proposta no site da Câmara. A caixa alta do texto oficial foi trocada por letras minúsculas para facilitar a leitura.</p>';
+ GR.forEach(function(t,k){var c=g[k]||[0,0],n=c[0]+c[1];
+  h+='<details class="gd" data-k="'+k+'"><summary>'+t[0]+' ('+n+')</summary><div class="gbody muted">'+(n?'Carregando…':'Nenhuma proposta neste grupo.')+'</div></details>'});
+ h+='<details><summary>Como agrupamos</summary><p class="muted">A regra olha primeiro o tipo da proposta e, em alguns tipos, as palavras do texto oficial (a ementa). É feita por programa, igual para todos, sem escolha caso a caso. Pode haver erros em casos de texto pouco claro.</p>';
+ GR.forEach(function(t){h+='<p><strong>'+t[0]+'.</strong> '+t[2]+'</p>'});
+ h+='</details>';
+ h+='<details><summary>Por tipo de proposta, como a Câmara classifica</summary><table><thead><tr><th>Tipo</th><th class="n">2025</th><th class="n">2026</th></tr></thead><tbody>';
+ var P=D.props[i]||{};
+ T.forEach(function(t){var c=P[t[0]]||[0,0],u=PL+t[1];
+  h+='<tr><td><strong>'+t[2]+'</strong><br><span class="muted">'+t[3]+'</span></td><td class="n">'+A(u,c[0])+'</td><td class="n">'+A(u,c[1])+'</td></tr>'});
+ h+='</tbody></table></details>';
+ h+='<p class="muted">As definições são um resumo simples; as oficiais estão no '+A(URL_GLOS,"glossário legislativo da Câmara")+'.</p>';
+ return h}
+function secVotes(i){
+ var v=votes[i],cnt={n:{S:0,N:0,A:0,"-":0},v:{S:0,N:0,A:0,"-":0}};
+ v.forEach(function(x,k){cnt[rows[k].veto?"v":"n"][x]++});
+ function card(c,lab,u){return '<div class="card"><div class="big">'+A(u,c)+'</div><div class="lab">'+lab+'</div></div>'}
+ function block(o,title,note){var tot=o.S+o.N+o.A+o["-"];
+  return '<h3>'+title+' <span class="muted">('+tot+' votações)</span></h3>'+(note?'<p class="muted">'+note+'</p>':'')+'<div class="cards">'+card(o.S,"votou “Sim”",URL_VOT)+card(o.N,"votou “Não”",URL_VOT)+card(o.A,"se absteve",URL_VOT)+card(o["-"],"não consta na lista",URL_VOT)+'</div>'}
+ var h='<p class="muted">Só entram votações em que a Câmara registrou o voto de cada vereador pelo nome (votação nominal). São '+rows.length+' votações entre {{VOTOS_PERIODO}}. Clique em um número para abrir a página oficial de votações; cada linha da lista leva ao texto da sessão.</p>';
+ h+=block(cnt.n,"Votações em geral","");
+ h+=block(cnt.v,"Votações sobre vetos","Veto é quando o prefeito recusa uma lei aprovada pela Câmara, e os vereadores votam se aceitam ou não essa recusa. Aqui “Sim” e “Não” respondem a essa pergunta, que pode ser formulada de jeitos diferentes. Leia o texto da sessão para ver o que cada resposta significou.");
+ h+='<details><summary>Lista de todas as votações</summary><p class="muted">Da mais recente para a mais antiga. “Não consta na lista” quer dizer que o nome não está na relação de votantes publicada.</p><div id="vl"></div><p><button class="link" id="more">Mostrar mais</button></p></details>';
+ return {html:h,v:v}}
+var VL={S:"Sim",N:"Não",A:"Abstenção","-":"Não consta na lista"};
+function mountVotes(v){var shown=0,el=document.getElementById("vl"),b=document.getElementById("more");
+ function more(){var end=Math.min(rows.length,shown+30),h="";
+  for(var k=shown;k<end;k++){var r=rows[k];h+='<div class="row"><div class="t">'+A(docUrl(r.id),esc(r.code||"Votação sem identificação clara"))+(r.veto?' <span class="pill">veto</span>':'')+' <span class="muted">· '+r.date+'</span></div><div>'+VL[v[k]]+'</div></div>'}
+  el.insertAdjacentHTML("beforeend",h);shown=end;if(shown>=rows.length)b.style.display="none"}
+ b.onclick=more;more()}
+function person(i){
+ var cur=isCurrent(i);
+ var h='<a class="back" href="#">← Voltar à lista</a><h2 style="margin-top:6px">'+esc(nice(NAMES[i]))+'</h2>';
+ if(!cur)h+='<p class="muted">Este nome não estava na lista de frequência de {{ULTIMO_MES}}. Os números valem só para os meses em que aparece.</p>';
+ h+='<div class="tabs" role="tablist"><button class="tab" role="tab" data-t="p" aria-selected="true">Faltas</button><button class="tab" role="tab" data-t="r" aria-selected="false">Propostas</button><button class="tab" role="tab" data-t="v" aria-selected="false">Votos</button></div>';
+ var sv=secVotes(i);
+ h+='<section id="s-p">'+'<h3>Faltas às sessões</h3>'+secPres(i)+'</section><section id="s-r" class="hide"><h3>Propostas apresentadas</h3>'+secProps(i)+'</section><section id="s-v" class="hide"><h3>Votos</h3>'+sv.html+'</section>';
+ app.innerHTML=h;
+ mountVotes(sv.v);mountGroups(i);
+ var tabs=app.querySelectorAll("button.tab");
+ tabs.forEach(function(b){b.onclick=function(){tabs.forEach(function(x){x.setAttribute("aria-selected",x===b?"true":"false")});["p","r","v"].forEach(function(k){document.getElementById("s-"+k).classList.toggle("hide",k!==b.dataset.t)})}});
+ window.scrollTo(0,0)}
+
+var IND=null,REP=null,CATN=[];
+function loadSearch(){if(!window.__sp)window.__sp=Promise.all([fetch('data/ind.json').then(function(r){if(!r.ok)throw 0;return r.json()}),fetch('data/rep.json').then(function(r){if(!r.ok)throw 0;return r.json()})]).then(function(a){IND=a[0];REP=a[1].rep;CATN=a[1].cats;IND.forEach(function(r){r.nt=norm(r[2])});REP.forEach(function(g){g.nt=norm(g[0]+' '+g[1])});});return window.__sp}
+function authors(ids){return ids.map(function(i){return esc(nice(NAMES[i]))}).join(", ")}
+function itemHtml(r){return '<div class="row"><div class="t">'+(r[1]?A(DOCB+'scpro.nsf/'+r[1]+'?OpenDocument',esc(r[0])):esc(r[0]))+' <span class="muted">· '+(r[3]||'sem data')+'</span><span class="pill">'+esc(CATN[r[5]])+'</span></div><div class="ement">'+esc(r[2])+'</div><div class="muted">Pedido por: '+authors(r[4])+'</div></div>'}
+function searchView(){
+ var h='<a class="back" href="#">← Voltar à lista de vereadores</a><h2 style="margin-top:6px">Buscar por bairro ou rua</h2>';
+ h+='<div class="box" style="border-color:#b26a00"><strong>Leia antes.</strong> Pedido repetido não prova que a Prefeitura ignorou o pedido. Aqui só aparece o que os vereadores pediram e quando. A Câmara não publica nesta lista se o serviço foi feito, se a Prefeitura respondeu ou se o problema voltou depois de resolvido. Vários vereadores podem pedir a mesma coisa, e um mesmo vereador pode pedir de novo por causa de um problema novo ou de outro trecho da rua.</div>';
+ h+='<label for="sq"><strong>Digite o bairro ou a rua</strong></label><input id="sq" class="f" type="search" placeholder="Ex.: Rocha Miranda, Rua dos Diamantes" autocomplete="off">';
+ h+='<label for="sc" class="muted">Tipo de pedido</label><select id="sc" class="f"><option value="-1">Todos os tipos</option></select>';
+ h+='<div id="sst" class="muted">Carregando os pedidos…</div><div id="srep"></div><div id="sres"></div>';
+ h+='<details><summary>Como funciona</summary><p class="muted">Só entram as “indicações” de 2025 e 2026, que são os pedidos de serviço e obra feitos ao prefeito ({{N_IND}} no total). A busca procura as palavras digitadas no texto oficial de cada pedido, sem diferenciar acentos e maiúsculas. Pedidos com autores fora dos {{N_CANON}} nomes deste site não aparecem. O programa lê o nome da rua e do bairro do texto e agrupa pedidos com a mesma rua, o mesmo bairro e o mesmo tipo; grafias diferentes podem separar pedidos iguais, e ruas de mesmo nome podem ser juntadas por engano. Os tipos são decididos por palavras do texto (por exemplo, “buraco” ou “asfalto” vai para “Buraco, asfalto e pavimentação”), na ordem em que aparecem na lista, e o primeiro que combina vale. Um pedido só entra como repetido quando há 3 ou mais pedidos do mesmo tipo para a mesma rua e bairro.</p></details>';
+ app.innerHTML=h;window.scrollTo(0,0);
+ loadSearch().then(function(){
+  var sc=document.getElementById('sc');CATN.forEach(function(c,k){var o=document.createElement('option');o.value=k;o.textContent=c;sc.appendChild(o)});
+  var q=document.getElementById('sq'),st=document.getElementById('sst'),rp=document.getElementById('srep'),rs=document.getElementById('sres'),F=[],shown=0,G=[],gshown=0,tm=null;
+  function gHtml(g){var d=g[3].map(function(i){return IND[i]});var ds=d.filter(function(r){return r[3]});
+   return '<details class="gd"><summary>'+esc(nice(g[0]))+(g[1]?' — '+esc(nice(g[1])):'')+': '+g[3].length+' pedidos de “'+esc(CATN[g[2]])+'”'+(ds.length?' <span class="muted">('+ds[0][3]+' a '+ds[ds.length-1][3]+')</span>':'')+'</summary>'+d.map(function(r){return '<div class="row"><div class="t">'+(r[1]?A(DOCB+'scpro.nsf/'+r[1]+'?OpenDocument',esc(r[0])):esc(r[0]))+' <span class="muted">· '+(r[3]||'sem data')+'</span></div><div class="muted">Pedido por: '+authors(r[4])+'</div></div>'}).join('')+'</details>'}
+  function run(){var toks=norm(q.value.trim()).split(/\s+/).filter(Boolean),c=+sc.value;
+   F=IND.filter(function(r){return(c<0||r[5]===c)&&toks.every(function(t){return r.nt.indexOf(t)>-1})});
+   G=REP.filter(function(g){return(c<0||g[2]===c)&&toks.every(function(t){return g.nt.indexOf(t)>-1})});
+   shown=0;gshown=0;rs.innerHTML='';rp.innerHTML='';
+   st.textContent=(toks.length?'Pedidos encontrados: ':'Todos os pedidos de 2025 e 2026: ')+F.length;
+   rp.innerHTML='<h3>Pedidos do mesmo tipo que voltam para a mesma rua <span class="muted">('+G.length+')</span></h3><p class="muted">Ruas com 3 ou mais pedidos do mesmo tipo. Lembre: isso não prova que a Prefeitura ignorou o pedido.</p><div id="gl"></div><p><button class="link" id="gm">Mostrar mais ruas</button></p>';
+   var gl=document.getElementById('gl'),gm=document.getElementById('gm');
+   function gmore(){var e=Math.min(G.length,gshown+15);gl.insertAdjacentHTML('beforeend',G.slice(gshown,e).map(gHtml).join(''));gshown=e;gm.style.display=gshown>=G.length?'none':''}
+   if(!G.length){gl.innerHTML='<p class="muted">Nenhuma rua com 3 ou mais pedidos do mesmo tipo para esta busca.</p>'}
+   gm.onclick=gmore;gmore();
+   rs.innerHTML='<h3>Todos os pedidos encontrados</h3><div id="il"></div><p><button class="link" id="im">Mostrar mais pedidos</button></p>';
+   var il=document.getElementById('il'),im=document.getElementById('im');
+   function imore(){var e=Math.min(F.length,shown+30);il.insertAdjacentHTML('beforeend',F.slice(shown,e).map(itemHtml).join(''));shown=e;im.style.display=shown>=F.length?'none':''}
+   if(!F.length){il.innerHTML='<p class="muted">Nenhum pedido encontrado. Tente só uma palavra do nome.</p>'}
+   im.onclick=imore;imore()}
+  q.addEventListener('input',function(){clearTimeout(tm);tm=setTimeout(run,250)});sc.addEventListener('change',run);run()
+ }).catch(function(){document.getElementById('sst').textContent='Não foi possível carregar os pedidos agora. Tente de novo.'})}
+function route(){var m=/^#v(\d+)$/.exec(location.hash);if(location.hash==="#busca")searchView();else if(m&&NAMES[+m[1]])person(+m[1]);else home()}
+window.addEventListener("hashchange",route);route();
+document.getElementById("foot-notes").innerHTML="Fontes: "+A(URL_FREQ,"frequência")+" · "+A(URL_VOT,"discursos e votações")+" · "+A(PL+"pl","processo legislativo")+". Atualizado em {{DATA}}.";
+})();
+</script>
+</body>
+</html>

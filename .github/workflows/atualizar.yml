@@ -1,0 +1,105 @@
+name: Atualizar site
+
+# Todo dia às 02:17 (horário de Brasília = 05:17 UTC) o robô coleta os dados oficiais de novo,
+# confere se vieram completos e normais e, só se passar, publica o site.
+# Se a conferência reprovar, NADA é publicado: o site continua na última versão boa
+# e este fluxo fica vermelho (o GitHub avisa por e-mail).
+on:
+  schedule:
+    - cron: '17 5 * * *'
+  workflow_dispatch:
+    inputs:
+      aceitar:
+        description: 'Aceitar divergências de votos contra a última versão boa (use só depois de ler o relatório)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write     # gravar a nova "última versão boa" em baseline/
+  pages: write
+  id-token: write
+
+concurrency:
+  group: atualizar-site
+  cancel-in-progress: false
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Instalar dependências
+        run: |
+          pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Testes dos leitores
+        run: python tests/test_parsers.py
+
+      - name: Preparar pasta de trabalho
+        run: |
+          mkdir -p raw
+          cp baseline/canon.json raw/canon.json
+          cp baseline/votos_cache.json raw/votos_cache.json
+
+      - name: Coletar presença (faltas por mês)
+        run: python pipeline/collect_presenca.py raw/presenca.json
+
+      - name: Coletar propostas
+        run: python pipeline/collect_props.py baseline/canon.json raw/props.json raw/props_estat.json
+
+      - name: Coletar votações
+        run: python pipeline/collect_votos.py baseline/canon.json raw/votos_cache.json raw/votos.json
+
+      - name: Conferir a coleta (trava de qualidade)
+        id: validar
+        run: |
+          ARGS=""
+          if [ "${{ github.event.inputs.aceitar }}" = "true" ]; then ARGS="--aceitar"; fi
+          python pipeline/validate.py raw baseline raw/relatorio.md $ARGS
+
+      - name: Mostrar relatório
+        if: always()
+        run: |
+          if [ -f raw/relatorio.md ]; then cat raw/relatorio.md >> "$GITHUB_STEP_SUMMARY"; fi
+          if [ -f raw/props_estat.json ]; then
+            echo '' >> "$GITHUB_STEP_SUMMARY"; echo '## Estatísticas das propostas' >> "$GITHUB_STEP_SUMMARY"
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"; cat raw/props_estat.json >> "$GITHUB_STEP_SUMMARY"; echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Gerar o site
+        run: python pipeline/build.py raw _site
+
+      - name: Testar o site gerado num navegador
+        run: python tests/smoke.py _site
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Publicar
+        id: deploy
+        uses: actions/deploy-pages@v4
+
+      - name: Guardar como nova "última versão boa"
+        run: |
+          python pipeline/update_baseline.py raw baseline
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add baseline
+          if git diff --cached --quiet; then echo "sem mudanças"; else
+            git commit -m "Atualiza última versão boa ($(date -u +%F)) [skip ci]"
+            git push
+          fi
