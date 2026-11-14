@@ -26,3 +26,5 @@ inicio 16:23:40
 usando bootstrap_raw no lugar da coleta ao vivo
 validacao inicio 16:23:40
 validacao ok 16:23:41
+inicio 16:27:52
+presenca inicio 16:27:52
