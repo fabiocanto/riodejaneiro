@@ -12,6 +12,7 @@ def parse(texto):
     out = []
     for nome, f, a, t in ROW.findall(texto):
         nome = re.sub(r'\s+', ' ', html.unescape(nome)).strip()
+        nome = re.sub(r'[\s*]+$', '', nome)  # a tabela marca alguns nomes com asterisco
         f, a, t = int(f), int(a), int(t)
         if t != f - a:
             raise ValueError('Total != Faltas - Abonadas para %s (%d, %d, %d)' % (nome, f, a, t))

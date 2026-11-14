@@ -14,29 +14,41 @@ RECENTE_DIAS = 21  # reler documentos dos últimos dias (a Câmara pode corrigir
 ALIAS = {}
 
 
+def _chave(pos):
+    return tuple(int(x) for x in pos.split('.'))
+
+
 def listar(sess, hoje):
-    """-> [(id, data_sessao_ou_None)] do mais novo ao mais antigo, só 2025 em diante."""
-    out, start, ano, mes, dia = [], 1, None, None, None
-    while True:
-        soup = BeautifulSoup(get(sess, LISTA % start), 'lxml')
-        achou = 0
+    """-> [(id, (ano, mes, dia))] do mais novo ao mais antigo, só 2025 em diante.
+    A lista oficial é paginada por posições hierárquicas (Start=ano.mes.dia.item)."""
+    out, vistos, pos = [], set(), '1'
+    for _ in range(300):
+        html_text = get(sess, APL + 'discvot.nsf/anoint?OpenForm&Count=500&Start=' + pos)
+        soup = BeautifulSoup(html_text, 'lxml')
+        ano = mes = dia = None
+        fim = False
         for tr in soup.find_all('tr'):
             if tr.find('tr'): continue
             a = tr.find('a', href=re.compile('OpenDocument'))
             txt = tr.get_text(' ', strip=True)
             if a:
-                achou += 1
-                out.append((a['href'].split('/')[-1].split('?')[0], (ano, mes, dia)))
+                i = a['href'].split('/')[-1].split('?')[0]
+                if i not in vistos:
+                    vistos.add(i)
+                    out.append((i, (ano, mes, dia)))
             elif re.fullmatch(r'\d{4}', txt):
                 ano = int(txt)
-                if ano < 2025: return [x for x in out if x[1][0] and x[1][0] >= 2025]
+                if ano < 2025: fim = True; break
             elif txt.lower() in MESES:
                 mes = MESES.index(txt.lower()) + 1
             elif re.fullmatch(r'\d\d/\d\d', txt):
                 dia = int(txt[:2])
-        if not achou: return out
-        start += 500
-        if start > 60000: return out
+        if fim: break
+        cand = {m.group(1) for m in re.finditer(r'Start=([\d.]+)&(?:amp;)?Count=', html_text)}
+        prox = max(cand, key=_chave) if cand else None
+        if not prox or _chave(prox) <= _chave(pos): break
+        pos = prox
+    return [x for x in out if x[1][0] and x[1][0] >= 2025]
 
 
 def codigo(titulo):

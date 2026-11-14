@@ -94,6 +94,10 @@ def main(raw, base, rel, aceitar=False):
         ant = {d['id']: d for d in b_votos['docs']}
         comuns = [d for d in docs if d['id'] in ant]
         div = [d['id'] for d in comuns if (d['S'], d['N'], d['A'], d['veto']) != (ant[d['id']]['S'], ant[d['id']]['N'], ant[d['id']]['A'], ant[d['id']]['veto'])]
+        for i in div[:5]:
+            d = next(x for x in comuns if x['id'] == i); o = ant[i]
+            W.append('Votação %s (%s, %s): antes S/N/A=%d/%d/%d veto=%s; agora %d/%d/%d veto=%s.' % (
+                d['code'] or i[:8], d['date'], i[:8], len(o['S']), len(o['N']), len(o['A']), o['veto'], len(d['S']), len(d['N']), len(d['A']), d['veto']))
         perdidos = [i for i in ant if i not in set(ids)]
         frac = len(div) / len(comuns) if comuns else 0
         (E if frac > VOTOS_DIVERGENTES_MAX else I).append('Votos: %d de %d votações já publicadas vieram diferentes (%.1f%%); %d sumiram.' % (len(div), len(comuns), 100 * frac, len(perdidos)))
