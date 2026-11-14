@@ -40,3 +40,4 @@ def norm_name(s):
     s = ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
     s = re.sub(r'^(VEREADOR(?:A)?\s+)', '', s.strip().upper())
     return re.sub(r'\s+', ' ', s)
+# coletores testados em 14/11/2026
