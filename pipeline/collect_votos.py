@@ -115,9 +115,17 @@ def main(canon_path, cache_path, saida, hoje=None):
         except Exception: return True
     pend = [i for i, d in lista if i not in cache or recente(d)]
     print('documentos na lista:', len(lista), '| a baixar:', len(pend))
+    falhas = []
+
+    def baixar(i):
+        try:
+            return parse_doc(get(sess, DOC % i), idx)
+        except Exception as e:  # falha pontual não derruba a coleta; é contada e conferida depois
+            falhas.append('%s: %s' % (i[:8], e))
+            return 'FALHA'
     with ThreadPoolExecutor(8) as ex:
-        for i, r in zip(pend, ex.map(lambda i: parse_doc(get(sess, DOC % i), idx), pend)):
-            cache[i] = r
+        for i, r in zip(pend, ex.map(baixar, pend)):
+            if r != 'FALHA': cache[i] = r
     docs, dropped, debug = [], 0, []
     for i, d in lista:
         r = cache.get(i)
@@ -129,9 +137,9 @@ def main(canon_path, cache_path, saida, hoje=None):
         docs.append({'id': i, 'code': '' if r['code'] == '?' else r['code'], 'date': r['date'], 'veto': r['veto'],
                      'S': sorted(set(r['S'])), 'N': sorted(set(r['N'])), 'A': sorted(set(r['A']))})
     json.dump(cache, open(cache_path, 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
-    json.dump({'docs': docs, 'dropped': dropped, 'listados': len(lista)}, open(saida, 'w', encoding='utf-8'), ensure_ascii=False)
+    json.dump({'docs': docs, 'dropped': dropped, 'listados': len(lista), 'download_falhou': len(falhas), 'falhas': falhas[:30]}, open(saida, 'w', encoding='utf-8'), ensure_ascii=False)
     json.dump(debug[:150], open(saida.replace('.json', '_debug.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-    print('votações nominais:', len(docs), '| descartadas:', dropped)
+    print('votações nominais:', len(docs), '| descartadas:', dropped, '| downloads falhos:', len(falhas))
 
 
 if __name__ == '__main__':

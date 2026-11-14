@@ -86,6 +86,8 @@ def main(raw, base, rel, aceitar=False):
     # ---- votos
     docs = votos['docs']
     I.append('Votos: %s documentos de sessão listados de 2025 em diante.' % votos.get('listados', '?'))
+    df = votos.get('download_falhou', 0)
+    if df: (E if df > 20 else W).append('Votos: %d transcrições não puderam ser baixadas%s.' % (df, '' if df > 20 else ' (serão tentadas de novo amanhã)'))
     e_antes = len(E)
     I.append('Votos: %d votações nominais, %d descartadas (lista de nomes não bateu).' % (len(docs), votos['dropped']))
     if not docs: E.append('Votos: nenhuma votação nominal lida.')

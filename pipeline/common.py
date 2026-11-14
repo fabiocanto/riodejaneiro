@@ -14,7 +14,7 @@ def sessao():
     return s
 
 
-def get(s, url, tries=3):
+def get(s, url, tries=4):
     """GET com tentativas; devolve texto. Levanta erro se não conseguir (a coleta então falha e não publica)."""
     last = None
     for k in range(tries):
@@ -25,7 +25,7 @@ def get(s, url, tries=3):
             last = 'HTTP %s' % r.status_code
         except requests.RequestException as e:
             last = str(e)
-        time.sleep(2 * (k + 1))
+        time.sleep(3 * (k + 1))
     raise RuntimeError('falha ao baixar %s: %s' % (url, last))
 
 

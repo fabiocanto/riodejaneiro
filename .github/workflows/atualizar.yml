@@ -86,15 +86,15 @@ jobs:
 
       - name: Coletar presença (faltas por mês)
         timeout-minutes: 15
-        run: python pipeline/collect_presenca.py raw/presenca.json
+        run: python pipeline/collect_presenca.py raw/presenca.json 2> raw/erro_presenca.log || { cat raw/erro_presenca.log; exit 1; }
 
       - name: Coletar propostas
         timeout-minutes: 45
-        run: python pipeline/collect_props.py baseline/canon.json raw/props.json raw/props_estat.json
+        run: python pipeline/collect_props.py baseline/canon.json raw/props.json raw/props_estat.json 2> raw/erro_props.log || { cat raw/erro_props.log; exit 1; }
 
       - name: Coletar votações
         timeout-minutes: 45
-        run: python pipeline/collect_votos.py baseline/canon.json raw/votos_cache.json raw/votos.json
+        run: python pipeline/collect_votos.py baseline/canon.json raw/votos_cache.json raw/votos.json 2> raw/erro_votos.log || { cat raw/erro_votos.log; exit 1; }
 
       - name: Conferir a coleta (trava de qualidade)
         id: validar
@@ -119,6 +119,7 @@ jobs:
           cp raw/relatorio.md relatorios/ultima-execucao.md 2>/dev/null || true
           cp raw/props_estat.json relatorios/ 2>/dev/null || true
           cp raw/votos_debug.json relatorios/ 2>/dev/null || true
+          for f in raw/erro_*.log; do [ -s "$f" ] && cp "$f" relatorios/ || true; done
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add relatorios
