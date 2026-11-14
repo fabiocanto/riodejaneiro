@@ -41,3 +41,4 @@ def norm_name(s):
     s = re.sub(r'^(VEREADOR(?:A)?\s+)', '', s.strip().upper())
     return re.sub(r'\s+', ' ', s)
 # coletores testados em 14/11/2026
+# tentativa 09:30Z
