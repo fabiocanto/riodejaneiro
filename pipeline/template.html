@@ -112,14 +112,33 @@ input.f{width:100%;font-size:1rem;padding:12px;border:1px solid var(--hair);bord
   <h1 class="brand">DE OLHO<br><em>NO RIO</em></h1>
   <div class="live"><i></i>Dados oficiais da Câmara, coletados em {{DATA}}</div>
   <p class="sub">O que cada vereador do Rio de Janeiro fez desde {{PERIODO}}, direto dos registros oficiais da Câmara. Cada número tem um link para a fonte.</p>
+  <div class="meter">
+    <span class="ml">Salário pago aos 51 vereadores desde a posse</span>
+    <b class="mv num" id="tick">R$&nbsp;0,00</b>
+    <span class="ms">e subindo agora · estimativa: 51 salários de R$ 19.127,52 por mês desde 1º de janeiro de 2025</span>
+  </div>
 </header>
 <main id="app"></main>
 <footer>
   <p><strong>Sobre este site.</strong> Ele só reúne dados publicados pela Câmara em <a href="https://www.camara.rio">camara.rio</a>. Não dá nota, não compara vereadores e não opina. Pode haver erros de leitura: confira sempre no link oficial.</p>
+  <p class="muted">Criado por Fábio Canto. O funcionamento deste site é baseado no <a href="https://radarptlandia.org/" target="_blank" rel="noopener">Radar PTlândia</a>, criado por <a href="https://www.instagram.com/eugabrieldamasceno" target="_blank" rel="noopener">eugabrieldamasceno</a> no Instagram.</p>
   <p class="muted" id="foot-notes"></p>
 </footer>
 <script>
 /*DATA*/
+</script>
+<script>
+(function(){
+  var POSSE = new Date('2025-01-01T00:00:00-03:00').getTime();
+  var N_VER = 51, SAL_MES = 19127.52;
+  var POR_MS = N_VER * SAL_MES * 12 / (365.25 * 864e5);
+  var brl = new Intl.NumberFormat('pt-BR', {style:'currency', currency:'BRL'});
+  var el = document.getElementById('tick');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function tick(){ if(el) el.textContent = brl.format((Date.now() - POSSE) * POR_MS) }
+  tick();
+  if(!reduce) setInterval(tick, 120);
+})();
 </script>
 <script>
 (function(){
