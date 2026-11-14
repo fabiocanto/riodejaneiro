@@ -55,7 +55,7 @@ def nomes(s):
 
 CL = r'Senhor\w*\s+Vereador\w*\s+(.+?)\s+(\d+)\s*\('
 RE_SN = re.compile(r'vot(?:aram|ou)\s+(SIM|N[ÃA]O)\s+(?:os|o|as|a)\s+' + CL, re.I)
-RE_AB = re.compile(r'Abst[eê]ve(?:ram)?-se\s+(?:os|o|as|a)\s+' + CL, re.I)
+RE_AB = re.compile(r'Abst\w+-se\s+(?:os|o|as|a)\s+' + CL, re.I)
 
 
 def parse_doc(html_text, idx):

@@ -53,22 +53,27 @@ jobs:
           echo "CURL_CA_BUNDLE=$RUNNER_TEMP/ca-camara.pem" >> "$GITHUB_ENV"
           echo "::notice title=certificados::$(tr '\n' ' ' < "$RUNNER_TEMP/certs.log")"
 
-      - name: Testar acesso aos servidores da Câmara
-        timeout-minutes: 4
+      - name: Testar acesso aos servidores da Câmara (com novas tentativas)
+        timeout-minutes: 18
         run: |
-          BROWSER="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"
-          FALHOU=0
-          for U in "https://www.camara.rio/includes_php/vereadores_frequencia_excel.php?ano=2026&mes=10" \
-                   "https://aplicnt.camara.rj.gov.br/APL/Legislativos/scpro.nsf/Internet/LeiInt?OpenForm&Start=1&Count=3" \
-                   "https://aplicnt.camara.rj.gov.br/APL/Legislativos/discvot.nsf/anoint?OpenForm&Start=1&Count=20&ExpandView"; do
-            H="${U#https://}"; H="${H%%/*}"
-            R1=$(curl -sS -m 20 -o /dev/null -w "HTTP %{http_code} %{time_total}s" -A "riodejaneiro-dados/1.0" "$U" 2>&1 | tr '\n' ' ' || true)
-            R2=$(curl -sS -m 20 -o /dev/null -w "HTTP %{http_code} %{time_total}s" -A "$BROWSER" "$U" 2>&1 | tr '\n' ' ' || true)
-            R3=$(curl -sS -m 10 -o /dev/null -w "%{http_code}" "https://$H/" 2>&1 | tr '\n' ' ' || true)
-            echo "::notice title=$H::UA-robo=[$R1] UA-navegador=[$R2] raiz=[$R3]"
-            case "$R1$R2" in *"HTTP 200"*) ;; *) FALHOU=1 ;; esac
+          testar() {
+            FALHOU=0
+            for U in "https://www.camara.rio/includes_php/vereadores_frequencia_excel.php?ano=2026&mes=10" \
+                     "https://aplicnt.camara.rj.gov.br/APL/Legislativos/scpro.nsf/Internet/LeiInt?OpenForm&Start=1&Count=3" \
+                     "https://aplicnt.camara.rj.gov.br/APL/Legislativos/discvot.nsf/anoint?OpenForm&Start=1&Count=20&ExpandView"; do
+              R=$(curl -sS -m 25 -o /dev/null -w "HTTP %{http_code} %{time_total}s" -A "riodejaneiro-dados/1.0" "$U" 2>&1 | tr '\n' ' ' || true)
+              echo "::notice title=acesso::${U%%\?*} => $R"
+              case "$R" in *"HTTP 200"*) ;; *) FALHOU=1 ;; esac
+            done
+            return $FALHOU
+          }
+          for T in 1 2 3 4 5 6; do
+            if testar; then exit 0; fi
+            echo "tentativa $T falhou; esperando 2,5 min"
+            sleep 150
           done
-          if [ "$FALHOU" = 1 ]; then echo "::error title=Câmara inacessível::A Câmara não respondeu normalmente a este servidor do GitHub."; exit 1; fi
+          echo "::error title=Câmara inacessível::A Câmara não respondeu a este servidor do GitHub em 6 tentativas (15 min). Nada foi publicado; o site segue na última versão boa. O fluxo tenta de novo na próxima madrugada."
+          exit 1
 
       - name: Testes dos leitores
         run: python tests/test_parsers.py

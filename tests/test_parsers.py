@@ -56,6 +56,15 @@ def test_votacao():
     assert not V.parse_doc(DOC.replace('William Siri', 'Fulano de Tal'), IDX)['ok']
     # sem votação nominal => não entra
     assert V.parse_doc('<html><body>Em votação. (Os senhores vereadores registram seus votos)</body></html>', IDX) is None
+    # plural de abstenção ("abstiveram-se")
+    d2 = DOC.replace('Absteve-se o Senhor Vereador Rafael Aloisio Freitas 1 (um).',
+                     'Abstiveram-se os Senhores Vereadores Rafael Aloisio Freitas e Rick Azevedo 2 (dois).')
+    r2 = V.parse_doc(d2, IDX)
+    assert r2['ok'] and sorted(CANON[i] for i in r2['A']) == ['RAFAEL ALOISIO FREITAS', 'RICK AZEVEDO']
+    # "e as Senhoras Vereadoras" no meio da lista
+    d3 = DOC.replace('Maíra do Mst e William Siri', 'Maíra do Mst e a Senhora Vereadora Joyce Trindade').replace('5 (cinco)', '5 (cinco)')
+    r3 = V.parse_doc(d3.replace('Carlo Caiado, Maíra do Mst', 'Carlo Caiado, Maíra do Mst'), IDX)
+    assert r3['ok'], r3
     # veto
     assert V.parse_doc(DOC.replace('PROJETO DE LEI Nº 1277/2025.', 'VETO TOTAL APOSTO AO PROJETO'), IDX)['veto']
     assert V.codigo('Projeto De Decreto Legislativo 200/2026') == 'PDL 200/2026' and V.codigo(' Requerimento - Vereador X - ') == '?'
