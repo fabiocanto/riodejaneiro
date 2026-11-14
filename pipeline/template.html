@@ -20,7 +20,17 @@ h3{font-size:1.05rem;margin:20px 0 6px}
 input[type=search]{width:100%;font-size:1.05rem;padding:12px;border:1px solid #888;border-radius:8px;margin:8px 0 4px}
 ul.list{list-style:none;margin:0;padding:0}
 ul.list li{border-bottom:1px solid #e3e3e3}
-ul.list a{display:block;padding:13px 4px;text-decoration:none;color:#0b4fa3;font-size:1.05rem}
+ul.list a{display:flex;align-items:center;gap:10px;padding:10px 4px;text-decoration:none;color:#0b4fa3;font-size:1.05rem}
+.ava{width:36px;height:36px;border-radius:50%;object-fit:cover;flex:none;background:#e3e3e3;border:1px solid #cfcfcf}
+.ava.big{width:88px;height:88px;border-width:2px}
+.vname{flex:1;min-width:0}
+.vhead{display:flex;gap:14px;align-items:flex-start;margin:10px 0 6px}
+.vhead .meta{flex:1;min-width:0;padding-top:2px}
+.vhead h2{margin:0 0 4px}
+.pill-p{background:#f0f0f0;border-color:#bbb}
+.pill-c{background:#fff6dd;border-color:#caa23a;font-weight:600}
+.contact{font-size:.92rem;color:#444;margin:6px 0 0}
+.contact a{color:#0b4fa3}
 button.link,button.tab{font:inherit;cursor:pointer}
 button.link{background:none;border:0;color:#0b4fa3;text-decoration:underline;padding:6px 0}
 .back{display:inline-block;margin:14px 0 4px;padding:8px 0}
@@ -80,6 +90,9 @@ var T=[ // [chave, página oficial, nome simples, explicação]
  ["rq","req","Outros pedidos feitos na Câmara (“requerimentos”)","Pedidos feitos dentro da própria Câmara."]
 ];
 var NAMES=D.canon,N=NAMES.length;
+var EXTRA=D.extra||[];
+function ava(i,big){var e=EXTRA[i];if(!e||!e.foto)return '';return '<img class="ava'+(big?' big':'')+'" src="'+e.foto+'" alt="" loading="lazy">'}
+function pills(i){var e=EXTRA[i];if(!e)return '';var h='';if(e.partido)h+='<span class="pill pill-p">'+esc(e.partido)+'</span>';if(e.cargo)h+='<span class="pill pill-c">'+esc(e.cargo)+'</span>';return h}
 function nice(s){var small={"DA":1,"DE":1,"DO":1,"DOS":1,"DAS":1,"E":1};
  return s.toLowerCase().split(" ").map(function(w,i){if(small[w.toUpperCase()]&&i>0)return w;if(w==="mst")return "MST";if(w==="dr.")return "Dr.";return w.charAt(0).toUpperCase()+w.slice(1)}).join(" ")}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
@@ -108,7 +121,7 @@ function home(){
  h+='<details><summary>Ex-vereadores e suplentes que aparecem nos dados ('+old.length+')</summary><p class="muted">Nomes que constam nas listas oficiais do período, mas que não estavam na lista de {{ULTIMO_MES}}.</p><ul class="list" id="lst2"></ul></details>';
  h+='<details><summary>O que este site não mostra</summary><ul style="padding-left:20px"><li>A Câmara não publica a presença em cada sessão. Só publica o número de faltas por mês.</li><li>Na maior parte das votações, o plenário vota por “votação simbólica”: ninguém registra o voto de cada vereador. Só as votações nominais aparecem aqui.</li><li>Quando o nome de um vereador não está na lista de uma votação, o site escreve “não consta na lista”. Os registros não dizem o motivo.</li><li>'+D.dropped+' votações nominais foram deixadas de fora porque a lista de nomes não bateu com o total de votos informado no texto oficial.</li><li>Os votos em que um vereador pediu para registrar sua posição numa votação simbólica não estão nesta primeira versão.</li><li>A Câmara não tinha tabela de faltas publicada para estes meses, e por isso eles ficam de fora: {{MESES_SEM}}.</li></ul></details>';
  app.innerHTML=h;
- function fill(el,arr){el.innerHTML=arr.map(function(i){return '<li><a href="#v'+i+'">'+esc(nice(NAMES[i]))+'</a></li>'}).join("")}
+ function fill(el,arr){el.innerHTML=arr.map(function(i){return '<li><a href="#v'+i+'">'+ava(i,false)+'<span class="vname">'+esc(nice(NAMES[i]))+' '+pills(i)+'</span></a></li>'}).join("")}
  var l1=document.getElementById("lst"),l2=document.getElementById("lst2");
  fill(l1,cur);fill(l2,old);
  document.getElementById("q").addEventListener("input",function(e){var q=norm(e.target.value.trim());
@@ -188,10 +201,16 @@ function mountVotes(v){var shown=0,el=document.getElementById("vl"),b=document.g
   for(var k=shown;k<end;k++){var r=rows[k];h+='<div class="row"><div class="t">'+A(docUrl(r.id),esc(r.code||"Votação sem identificação clara"))+(r.veto?' <span class="pill">veto</span>':'')+' <span class="muted">· '+r.date+'</span></div><div>'+VL[v[k]]+'</div></div>'}
   el.insertAdjacentHTML("beforeend",h);shown=end;if(shown>=rows.length)b.style.display="none"}
  b.onclick=more;more()}
+function contactBox(i){var e=EXTRA[i];if(!e)return '';var parts=[];
+ if(e.sala)parts.push('Sala: '+esc(e.sala));
+ if(e.telefone)parts.push('Tel.: '+esc(e.telefone));
+ if(e.email)parts.push('<a href="mailto:'+esc(e.email)+'">'+esc(e.email)+'</a>');
+ if(e.partidoSite)parts.push('Partido: '+(e.partido?esc(e.partido)+' ':'')+'('+A(e.partidoSite,'site')+')');
+ return parts.length?'<p class="contact">'+parts.join(' · ')+'</p>':''}
 function person(i){
  var cur=isCurrent(i);
- var h='<a class="back" href="#">← Voltar à lista</a><h2 style="margin-top:6px">'+esc(nice(NAMES[i]))+'</h2>';
- if(!cur)h+='<p class="muted">Este nome não estava na lista de frequência de {{ULTIMO_MES}}. Os números valem só para os meses em que aparece.</p>';
+ var h='<a class="back" href="#">← Voltar à lista</a>';
+ h+='<div class="vhead">'+ava(i,true)+'<div class="meta"><h2>'+esc(nice(NAMES[i]))+'</h2>'+pills(i)+contactBox(i)+'</div></div>';
  h+='<div class="tabs" role="tablist"><button class="tab" role="tab" data-t="p" aria-selected="true">Faltas</button><button class="tab" role="tab" data-t="r" aria-selected="false">Propostas</button><button class="tab" role="tab" data-t="v" aria-selected="false">Votos</button></div>';
  var sv=secVotes(i);
  h+='<section id="s-p">'+'<h3>Faltas às sessões</h3>'+secPres(i)+'</section><section id="s-r" class="hide"><h3>Propostas apresentadas</h3>'+secProps(i)+'</section><section id="s-v" class="hide"><h3>Votos</h3>'+sv.html+'</section>';

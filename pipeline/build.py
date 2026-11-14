@@ -32,6 +32,9 @@ def meses_sem(months, hoje):
 
 def main(raw, out, hoje):
     canon = json.load(open(os.path.join(os.path.dirname(__file__), '..', 'baseline', 'canon.json'), encoding='utf-8'))
+    extra_path = os.path.join(os.path.dirname(__file__), '..', 'baseline', 'vereadores_extra.json')
+    extra_raw = json.load(open(extra_path, encoding='utf-8')) if os.path.exists(extra_path) else []
+    extra_by_idx = {e['idx']: e for e in extra_raw}
     pres = json.load(open(os.path.join(raw, 'presenca.json'), encoding='utf-8'))
     rows = json.load(open(os.path.join(raw, 'props.json'), encoding='utf-8'))
     votos = json.load(open(os.path.join(raw, 'votos.json'), encoding='utf-8'))
@@ -46,9 +49,19 @@ def main(raw, out, hoje):
     docs = votos['docs']
     V = [B.rle([('S' if i in d['S'] else 'N' if i in d['N'] else 'A' if i in d['A'] else '-') for d in docs])
          for i in range(n)]
+    extra = [extra_by_idx.get(i) and {
+        'partido': extra_by_idx[i].get('partido'),
+        'cargo': extra_by_idx[i].get('cargo'),
+        'foto': extra_by_idx[i].get('foto'),
+        'sala': extra_by_idx[i].get('sala'),
+        'telefone': extra_by_idx[i].get('telefone'),
+        'email': extra_by_idx[i].get('email'),
+        'partidoSite': extra_by_idx[i].get('partidoSite'),
+    } for i in range(n)]
     D = {"canon": canon, "months": months, "pres": lines,
          "rows": ['%s|%s|%s|%d' % (d['code'] or '?', d['date'], d['id'], 1 if d['veto'] else 0) for d in docs],
-         "V": V, "dropped": votos['dropped'], "props": props, "last": {}, "groups": groups}
+         "V": V, "dropped": votos['dropped'], "props": props, "last": {}, "groups": groups,
+         "extra": extra}
     datas = [d['date'] for d in docs]
     ultimo = '%s de %d' % (MES[months[-1][1]], months[-1][0])
     meta = {
@@ -70,6 +83,13 @@ def main(raw, out, hoje):
     json.dump(rep, open(os.path.join(out, 'data', 'rep.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
     open(os.path.join(out, '.nojekyll'), 'w').write('')
     open(os.path.join(out, 'CNAME'), 'w').write('carrapeta.com.br\n')
+    fotos_src = os.path.join(os.path.dirname(__file__), '..', 'assets', 'vereadores')
+    if os.path.isdir(fotos_src):
+        fotos_dst = os.path.join(out, 'assets', 'vereadores')
+        os.makedirs(fotos_dst, exist_ok=True)
+        for fn in os.listdir(fotos_src):
+            with open(os.path.join(fotos_src, fn), 'rb') as fsrc, open(os.path.join(fotos_dst, fn), 'wb') as fdst:
+                fdst.write(fsrc.read())
     json.dump({'meta': meta, 'D_keys': list(D)}, open(os.path.join(raw, 'build_info.json'), 'w'))
     return D
 
