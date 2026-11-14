@@ -22,10 +22,10 @@ def listar(sess, hoje):
     """-> [(id, (ano, mes, dia))] do mais novo ao mais antigo, só 2025 em diante.
     A lista oficial é paginada por posições hierárquicas (Start=ano.mes.dia.item)."""
     out, vistos, pos = [], set(), '1'
+    ano = mes = dia = None  # o estado atravessa as páginas: muitas não repetem o cabeçalho de ano/mês
     for _ in range(300):
         html_text = get(sess, APL + 'discvot.nsf/anoint?OpenForm&Count=500&Start=' + pos)
         soup = BeautifulSoup(html_text, 'lxml')
-        ano = mes = dia = None
         fim = False
         for tr in soup.find_all('tr'):
             if tr.find('tr'): continue

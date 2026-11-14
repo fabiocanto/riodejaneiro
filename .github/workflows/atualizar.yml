@@ -100,7 +100,7 @@ jobs:
         id: validar
         run: |
           ARGS=""
-          if [ "${{ github.event.inputs.aceitar }}" = "true" ]; then ARGS="--aceitar"; fi
+          if [ "${{ github.event.inputs.aceitar }}" = "true" ] || [ -f baseline/ACEITAR_VOTOS ]; then ARGS="--aceitar"; fi
           python pipeline/validate.py raw baseline raw/relatorio.md $ARGS
 
       - name: Mostrar relatório
@@ -135,6 +135,8 @@ jobs:
         run: python tests/smoke.py _site
 
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:

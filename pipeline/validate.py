@@ -85,6 +85,8 @@ def main(raw, base, rel, aceitar=False):
 
     # ---- votos
     docs = votos['docs']
+    I.append('Votos: %s documentos de sessão listados de 2025 em diante.' % votos.get('listados', '?'))
+    e_antes = len(E)
     I.append('Votos: %d votações nominais, %d descartadas (lista de nomes não bateu).' % (len(docs), votos['dropped']))
     if not docs: E.append('Votos: nenhuma votação nominal lida.')
     ids = [d['id'] for d in docs]
@@ -102,8 +104,9 @@ def main(raw, base, rel, aceitar=False):
         frac = len(div) / len(comuns) if comuns else 0
         (E if frac > VOTOS_DIVERGENTES_MAX else I).append('Votos: %d de %d votações já publicadas vieram diferentes (%.1f%%); %d sumiram.' % (len(div), len(comuns), 100 * frac, len(perdidos)))
         if votos['dropped'] > b_votos['dropped'] + VOTOS_DESCARTADOS_ALTA_MAX: E.append('Votos: descartadas subiu de %d para %d.' % (b_votos['dropped'], votos['dropped']))
-        if aceitar and E:
-            W += ['(--aceitar) ERRO ignorado: ' + e for e in E]; E = []
+        if aceitar and len(E) > e_antes:
+            W += ['Aceite único em vigor: divergência de votos contra a última versão boa foi aceita e vira a nova referência. ERRO ignorado: ' + e for e in E[e_antes:]]
+            del E[e_antes:]
     elif not b_votos:
         W.append('Votos: sem baseline para comparar.')
 
