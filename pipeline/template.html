@@ -79,6 +79,14 @@ ol.rankav li .nm:hover{color:var(--b)}
 ol.rankav li .ct{grid-column:3;grid-row:1;font-family:var(--display);font-weight:800;color:var(--ink)}
 ol.rankav li .br{grid-column:2/4;grid-row:2;height:6px;background:var(--soft);border-radius:3px;overflow:hidden;margin-top:2px}
 ol.rankav li .br i{display:block;height:100%;background:var(--b);border-radius:3px}
+ul.lims{list-style:none;margin:0;padding:0}
+ul.lims li{padding:10px 0;border-bottom:1px solid var(--hair)}
+ul.lims li:last-child{border-bottom:none}
+ul.lims .ll{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-weight:600;font-size:.92rem}
+ul.lims .lv{font-family:var(--display);font-weight:800;color:var(--ink);flex:none}
+ul.lims .lb{height:8px;background:var(--soft);border-radius:4px;overflow:hidden;margin-top:5px}
+ul.lims .lb i{display:block;height:100%;border-radius:4px;background:var(--b)}
+ul.lims .lmax{font-size:.78rem;color:var(--mute);margin-top:3px}
 button.rankbtn{display:flex;width:100%;text-align:left;background:none;border:0;font:inherit;padding:0;cursor:pointer;color:inherit}
 @media (max-width:420px){.cats{grid-template-columns:1fr 1fr}}
 button.link,button.tab{font:inherit;cursor:pointer}
@@ -210,10 +218,30 @@ function countersHtml(){
   h+='<ol class="rank">'+RANK.topCats.map(function(p){return '<li><span class="nm">'+esc(p[0])+'</span><span class="ct">'+fmt(p[1])+'</span></li>'}).join('')+'</ol>';
  }
  return h}
+function contasHtml(){
+ var h='<div class="box"><h2>Contas da Câmara em 2025</h2>';
+ h+='<p class="muted" style="margin:0 0 10px">Números oficiais e auditados, tirados do <a href="https://transparencia.camara.rj.gov.br/2025-10/1039-processo-prestacao-de-contas-2025/file" target="_blank" rel="noopener">Processo de Prestação de Contas 2025</a> da Mesa Diretora (Balanço Geral e Relatório de Gestão Fiscal). A Câmara não arrecada receita própria: ela recebe todo mês um repasse do Tesouro Municipal (o “duodécimo”) para cobrir suas despesas.</p>';
+ h+='<div style="overflow-x:auto"><table style="font-size:.85rem"><thead><tr><th>Despesa em 2025</th><th class="n">Empenhado</th><th class="n">Pago</th></tr></thead><tbody>';
+ h+='<tr><td>Pessoal e encargos</td><td class="n">564,2 mi</td><td class="n">541,6 mi</td></tr>';
+ h+='<tr><td>Outras despesas corr.</td><td class="n">245,9 mi</td><td class="n">197,6 mi</td></tr>';
+ h+='<tr><td>Investimentos</td><td class="n">10,7 mi</td><td class="n">4,8 mi</td></tr>';
+ h+='<tr><td><strong>Total</strong></td><td class="n"><strong>820,8 mi</strong></td><td class="n"><strong>744,0 mi</strong></td></tr>';
+ h+='</tbody></table></div><p class="muted" style="margin:4px 0 0;font-size:.82rem">Valores em milhões de reais (R$ 1 mi = R$ 1.000.000). Totais exatos: empenhado R$&nbsp;820.810.805,08; pago R$&nbsp;743.949.723,99.</p>';
+ h+='<h3>Limites legais</h3><p class="muted" style="margin:0 0 6px">A Constituição e a Lei de Responsabilidade Fiscal travam o quanto a Câmara pode gastar. Em 2025, nenhum limite foi ultrapassado.</p>';
+ h+='<ul class="lims">';
+ h+='<li><div class="ll"><span>Despesa total do Legislativo</span><span class="lv">3,44%</span></div><div class="lb"><i style="width:86%"></i></div><div class="lmax">Limite constitucional: 4,00% da receita tributária + transferências</div></li>';
+ h+='<li><div class="ll"><span>Folha de pagamento do Legislativo</span><span class="lv">50,76%</span></div><div class="lb"><i style="width:73%"></i></div><div class="lmax">Limite constitucional: 70,00% do repasse (duodécimo) previsto</div></li>';
+ h+='<li><div class="ll"><span>Despesa com pessoal (Lei de Responsabilidade Fiscal)</span><span class="lv">2,00%</span></div><div class="lb"><i style="width:44%"></i></div><div class="lmax">Limite máximo: 4,55% da receita corrente líquida do município</div></li>';
+ h+='<li><div class="ll"><span>Subsídio dos vereadores</span><span class="lv">0,035%</span></div><div class="lb"><i style="width:1%"></i></div><div class="lmax">Limite constitucional: 5,00% da receita do município</div></li>';
+ h+='</ul>';
+ h+='<p class="muted" style="margin:12px 0 0">O <strong>Fundo Especial da Câmara (FECMRJ)</strong>, que é separado do orçamento normal, arrecadou R$&nbsp;39.514.222,86 em 2025 (quase tudo receita financeira) e terminou o ano com patrimônio líquido de R$&nbsp;165.348.992,47.</p>';
+ h+='</div>';
+ return h}
 function home(){
  var cur=order.filter(isCurrent),old=order.filter(function(i){return!isCurrent(i)});
  var h='<div class="box"><h2>Como ler</h2><p style="margin:0 0 8px">Escolha um vereador na lista. Você verá três coisas, tiradas dos registros da Câmara:</p><ul style="margin:0 0 8px;padding-left:20px"><li><strong>Faltas</strong>: quantas vezes faltou às sessões, mês a mês.</li><li><strong>Propostas</strong>: o que apresentou, em palavras simples.</li><li><strong>Votos</strong>: como votou quando o voto de cada um foi registrado.</li></ul><p class="muted" style="margin:0">A ordem das listas é sempre alfabética. Este site não faz ranking nem avalia ninguém.</p></div>';
  h+=countersHtml();
+ h+=contasHtml();
  h+='<a href="#busca" style="display:block;border:2px solid var(--ink);border-radius:16px;padding:16px;margin:14px 0;text-decoration:none;color:var(--ink);box-shadow:var(--shadow)"><strong style="font-family:var(--display)">Buscar por bairro ou rua →</strong><br><span class="muted">Veja tudo o que foi pedido para o seu bairro ou rua e por quem.</span></a>';
  h+='<label for="q"><strong>Procurar vereador</strong></label><div class="search"><span class="sic">🔎</span><input id="q" type="search" placeholder="Digite o nome" autocomplete="off"></div>';
  var parties=[];cur.concat(old).forEach(function(i){var p=EXTRA[i]&&EXTRA[i].partido;if(p&&parties.indexOf(p)<0)parties.push(p)});
