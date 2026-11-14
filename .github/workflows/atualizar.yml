@@ -129,7 +129,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f raw/passos.txt raw/relatorio.md raw/erro_presenca.log raw/erro_props.log raw/erro_votos.log raw/props_estat.json raw/votos_debug.json 2>/dev/null || true
+          for f in raw/passos.txt raw/relatorio.md raw/erro_presenca.log raw/erro_props.log raw/erro_votos.log raw/props_estat.json raw/votos_debug.json; do
+            [ -f "$f" ] && git add -f "$f" || true
+          done
           git commit -q -m "estado da execução $(date -u +%FT%TZ)" || true
           git push -f origin HEAD:execucao || true
 
