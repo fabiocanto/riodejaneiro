@@ -81,27 +81,39 @@ jobs:
       - name: Preparar pasta de trabalho
         run: |
           mkdir -p raw
+          echo "inicio $(date -u +%T)" >> raw/passos.txt
           cp baseline/canon.json raw/canon.json
           cp baseline/votos_cache.json raw/votos_cache.json
 
       - name: Coletar presença (faltas por mês)
         timeout-minutes: 15
-        run: python pipeline/collect_presenca.py raw/presenca.json 2> raw/erro_presenca.log || { cat raw/erro_presenca.log; exit 1; }
+        run: |
+          echo "presenca inicio $(date -u +%T)" >> raw/passos.txt
+          python pipeline/collect_presenca.py raw/presenca.json 2> raw/erro_presenca.log || { cat raw/erro_presenca.log; exit 1; }
+          echo "presenca ok $(date -u +%T)" >> raw/passos.txt
 
       - name: Coletar propostas
         timeout-minutes: 45
-        run: python pipeline/collect_props.py baseline/canon.json raw/props.json raw/props_estat.json 2> raw/erro_props.log || { cat raw/erro_props.log; exit 1; }
+        run: |
+          echo "props inicio $(date -u +%T)" >> raw/passos.txt
+          python pipeline/collect_props.py baseline/canon.json raw/props.json raw/props_estat.json 2> raw/erro_props.log || { cat raw/erro_props.log; exit 1; }
+          echo "props ok $(date -u +%T)" >> raw/passos.txt
 
       - name: Coletar votações
         timeout-minutes: 45
-        run: python pipeline/collect_votos.py baseline/canon.json raw/votos_cache.json raw/votos.json 2> raw/erro_votos.log || { cat raw/erro_votos.log; exit 1; }
+        run: |
+          echo "votos inicio $(date -u +%T)" >> raw/passos.txt
+          python pipeline/collect_votos.py baseline/canon.json raw/votos_cache.json raw/votos.json 2> raw/erro_votos.log || { cat raw/erro_votos.log; exit 1; }
+          echo "votos ok $(date -u +%T)" >> raw/passos.txt
 
       - name: Conferir a coleta (trava de qualidade)
         id: validar
         run: |
           ARGS=""
           if [ "${{ github.event.inputs.aceitar }}" = "true" ] || [ -f baseline/ACEITAR_VOTOS ]; then ARGS="--aceitar"; fi
+          echo "validacao inicio $(date -u +%T)" >> raw/passos.txt
           python pipeline/validate.py raw baseline raw/relatorio.md $ARGS
+          echo "validacao ok $(date -u +%T)" >> raw/passos.txt
 
       - name: Mostrar relatório
         if: always()
@@ -111,6 +123,15 @@ jobs:
             echo '' >> "$GITHUB_STEP_SUMMARY"; echo '## Estatísticas das propostas' >> "$GITHUB_STEP_SUMMARY"
             echo '```json' >> "$GITHUB_STEP_SUMMARY"; cat raw/props_estat.json >> "$GITHUB_STEP_SUMMARY"; echo '```' >> "$GITHUB_STEP_SUMMARY"
           fi
+
+      - name: Publicar estado da execução no branch 'execucao'
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f raw/passos.txt raw/relatorio.md raw/erro_presenca.log raw/erro_props.log raw/erro_votos.log raw/props_estat.json raw/votos_debug.json 2>/dev/null || true
+          git commit -q -m "estado da execução $(date -u +%FT%TZ)" || true
+          git push -f origin HEAD:execucao || true
 
       - name: Guardar relatório no repositório (mesmo quando reprova)
         if: always()
