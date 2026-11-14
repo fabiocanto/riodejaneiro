@@ -63,11 +63,43 @@ def props_outputs(rows, n):
             if k is not None: grp[a][g][k] += 1
             lists[a][g].append([num, href, em])
     ind_rows = sorted((r for r in rows if r[0] == V_IND), key=lambda r: (date_key(r),) + num_key(r), reverse=True)
-    ind = [[r[1], r[2], r[3], short_date(r[4]), r[5], ext.cat(r[3])] for r in ind_rows]
+    ind = [[r[1], r[2], r[3], short_date(r[4]), r[5], ext.cat(r[3]), ext.bairro(r[3])] for r in ind_rows]
     order = ['pl', 'plc', 'pelom', 'pdl', 'pr', 'ind', 'moc', 'ri', 'rq']
     props = [{k: p[k] for k in order if k in p} for p in per]
     groups = [' '.join('%d/%d' % tuple(grp[i][g]) for g in GROUPS) for i in range(n)]
     return props, groups, lists, ind
+
+
+def rankings(rows, ind, n, top=10):
+    """Contadores gerais e rankings (quem mais propôs, bairros e categorias mais citados)."""
+    totals_group = {g: [0, 0] for g in GROUPS}
+    per_vereador_total = [0] * n
+    for view, num, href, em, dt, au in rows:
+        y = year_of(num)
+        if y not in (2025, 2026):
+            continue
+        g = group(view, em)
+        k = 0 if y == 2025 else 1
+        totals_group[g][k] += 1
+        for a in au:
+            per_vereador_total[a] += 1
+    top_vereadores = [[i, per_vereador_total[i]] for i in sorted(range(n), key=lambda i: -per_vereador_total[i])[:top]
+                       if per_vereador_total[i] > 0]
+    bairro_counts = collections.Counter()
+    cat_counts = collections.Counter()
+    for r in ind:
+        if r[6]:
+            bairro_counts[r[6]] += 1
+        cat_counts[r[5]] += 1
+    top_bairros = [[b, c] for b, c in bairro_counts.most_common(top)]
+    cat_names = [c[0] for c in ext.CATS] + ['Outros pedidos']
+    top_cats = [[cat_names[k], c] for k, c in cat_counts.most_common(len(cat_names))]
+    return {
+        'groupTotals': {g: totals_group[g] for g in GROUPS},
+        'topVereadores': top_vereadores,
+        'topBairros': top_bairros,
+        'topCats': top_cats,
+    }
 
 
 def repeated(ind):

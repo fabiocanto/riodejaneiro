@@ -46,6 +46,7 @@ def main(raw, out, hoje):
     months, lines = B.presenca_lines(pres, cidx, n)
     props, groups, lists, ind = B.props_outputs(rows, n)
     rep = B.repeated(ind)
+    rank = B.rankings(rows, ind, n)
     docs = votos['docs']
     V = [B.rle([('S' if i in d['S'] else 'N' if i in d['N'] else 'A' if i in d['A'] else '-') for d in docs])
          for i in range(n)]
@@ -61,11 +62,12 @@ def main(raw, out, hoje):
     D = {"canon": canon, "months": months, "pres": lines,
          "rows": ['%s|%s|%s|%d' % (d['code'] or '?', d['date'], d['id'], 1 if d['veto'] else 0) for d in docs],
          "V": V, "dropped": votos['dropped'], "props": props, "last": {}, "groups": groups,
-         "extra": extra}
+         "extra": extra, "rank": rank}
     datas = [d['date'] for d in docs]
     ultimo = '%s de %d' % (MES[months[-1][1]], months[-1][0])
     meta = {
         'PERIODO': 'fevereiro de 2025 a %s de %d' % (MES[hoje.month], hoje.year),
+        'PERIODO_CURTO': '2025 e 2026',
         'DATA': hoje.strftime('%d/%m/%Y'), 'ULTIMO_MES': ultimo,
         'MESES_SEM': meses_sem(months, hoje),
         'VOTOS_PERIODO': 'fev/2025 e %s/%d' % (MM[hoje.month], hoje.year),
