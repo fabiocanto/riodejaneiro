@@ -3,78 +3,115 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>O que cada vereador do Rio fez — dados oficiais</title>
+<title>De olho no Rio — o que cada vereador fez</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#fff;color:#1a1a1a;font:17px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
-a{color:#0b4fa3}
-a:visited{color:#5b3a9e}
-header,main,footer{max-width:720px;margin:0 auto;padding:0 16px}
-header{padding-top:20px;padding-bottom:8px}
-h1{font-size:1.5rem;line-height:1.25;margin:0 0 6px}
-h2{font-size:1.25rem;margin:28px 0 8px;line-height:1.3}
-h3{font-size:1.05rem;margin:20px 0 6px}
-.muted{color:#555;font-size:.92rem}
-.box{border:1px solid #cfcfcf;border-radius:8px;padding:12px 14px;margin:14px 0;background:#fff}
+:root{
+ --paper:#fff;--ink:#0f1720;--mute:#5b6875;--hair:#e6eaee;--soft:#f5f7f9;
+ --b:#1d5fe0;--b-t:#eaf1ff;--c:#d9580b;--c-t:#fff1e6;--h:#cf2573;--h-t:#ffeaf3;
+ --l:#0a8a5f;--l-t:#e4f7ef;--o:#5b6875;--o-t:#eef1f4;--red:#ff3131;--ok:#0a8a5f;--bad:#d23a2e;
+ --shadow:0 1px 2px rgba(15,23,32,.05),0 8px 24px -12px rgba(15,23,32,.14);
+ --display:"Bricolage Grotesque","Public Sans",system-ui,sans-serif;
+ --body:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.55 var(--body)}
+a{color:var(--b)}
+a:visited{color:var(--b)}
+header,main,footer{max-width:720px;margin:0 auto;padding:0 18px}
+header{padding-top:24px;padding-bottom:6px}
+h1.brand{margin:0 0 12px;font-family:var(--display);font-weight:800;font-size:2.1rem;line-height:1.02;letter-spacing:-.02em}
+h1.brand em{color:var(--red);font-style:normal}
+.live{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--ink);background:var(--soft);border-radius:999px;padding:6px 12px;margin:0 0 10px}
+.live i{width:9px;height:9px;border-radius:50%;background:var(--red);display:inline-block;flex:none}
+h2{font-family:var(--display);font-size:1.4rem;margin:30px 0 8px;line-height:1.25;font-weight:800;letter-spacing:-.01em}
+h3{font-size:1.05rem;margin:20px 0 6px;font-weight:700}
+.sub{color:var(--mute);margin:0 0 10px;font-size:.98rem;max-width:58ch}
+.muted{color:var(--mute);font-size:.92rem}
+.box{border:1px solid var(--hair);border-radius:16px;padding:14px 16px;margin:14px 0;background:var(--paper);box-shadow:var(--shadow)}
 .box h2,.box h3{margin-top:0}
-input[type=search]{width:100%;font-size:1.05rem;padding:12px;border:1px solid #888;border-radius:8px;margin:8px 0 4px}
-select#pf{width:100%;font-size:1.05rem;padding:12px;border:1px solid #888;border-radius:8px;margin:4px 0 14px;background:#fff}
+.search{position:relative}
+.search .sic{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:15px;opacity:.55;pointer-events:none}
+input[type=search]{width:100%;font-size:1.02rem;padding:14px 14px 14px 42px;border:2px solid var(--ink);border-radius:16px;margin:8px 0 4px;background:var(--paper);color:var(--ink);box-shadow:var(--shadow)}
+select#pf{width:100%;font-size:1rem;padding:13px 14px;border:1px solid var(--hair);border-radius:14px;margin:4px 0 14px;background:var(--soft);color:var(--ink)}
 ul.list{list-style:none;margin:0;padding:0}
-ul.list li{border-bottom:1px solid #e3e3e3}
-ul.list a{display:flex;align-items:center;gap:10px;padding:10px 4px;text-decoration:none;color:#0b4fa3;font-size:1.05rem}
-.ava{width:36px;height:36px;border-radius:50%;object-fit:cover;flex:none;background:#e3e3e3;border:1px solid #cfcfcf}
+ul.list li{border-bottom:1px solid var(--hair)}
+ul.list a{display:flex;align-items:center;gap:10px;padding:11px 4px;text-decoration:none;color:var(--ink);font-size:1.02rem}
+ul.list a:hover .vname{color:var(--b)}
+.ava{width:36px;height:36px;border-radius:50%;object-fit:cover;flex:none;background:var(--soft);border:1px solid var(--hair)}
 .ava.big{width:88px;height:88px;border-width:2px}
-.vname{flex:1;min-width:0}
+.vname{flex:1;min-width:0;font-weight:600}
 .vhead{display:flex;gap:14px;align-items:flex-start;margin:10px 0 6px}
 .vhead .meta{flex:1;min-width:0;padding-top:2px}
 .vhead h2{margin:0 0 4px}
-.pill-p{background:#f0f0f0;border-color:#bbb}
-.pill-c{background:#fff6dd;border-color:#caa23a;font-weight:600}
-.contact{font-size:.92rem;color:#444;margin:6px 0 0}
-.contact a{color:#0b4fa3}
-.counters{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
-.counters .c{border:1px solid #cfcfcf;border-radius:8px;padding:10px 12px}
-.counters .c .big{font-size:1.5rem;font-weight:700;line-height:1.15}
-.counters .c .lab{font-size:.85rem;color:#444}
+.pill{display:inline-block;background:var(--ink);color:#fff;border-radius:6px;padding:2px 8px;font-weight:700;font-size:12px;margin:0 6px 6px 0;vertical-align:middle}
+.pill-c{background:var(--h-t);color:var(--h)}
+.contact{font-size:.92rem;color:var(--mute);margin:6px 0 0}
+.contact a{color:var(--b)}
+.meter{background:var(--ink);color:#fff;border-radius:22px;padding:18px 20px 16px;margin:14px 0 10px}
+.meter .ml{display:block;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#ffb3b3}
+.meter .mv{display:block;font-family:var(--display);font-weight:800;font-size:clamp(34px,10vw,56px);line-height:1.05;letter-spacing:-.03em;margin:4px 0 6px}
+.meter .ms{display:block;font-size:12.5px;color:#b9c3cc;line-height:1.35}
+.cats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0 18px}
+.cat{background:var(--kt,var(--soft));border-radius:16px;padding:14px}
+.cat .ci{font-size:20px;line-height:1;margin-bottom:6px}
+.cat .cv{font-family:var(--display);font-weight:800;font-size:1.7rem;letter-spacing:-.02em;color:var(--k,var(--ink));display:block}
+.cat .cn{font-weight:700;font-size:.88rem}
+.cat.k-b{--kt:var(--b-t);--k:var(--b)}
+.cat.k-c{--kt:var(--c-t);--k:var(--c)}
+.cat.k-h{--kt:var(--h-t);--k:var(--h)}
+.cat.k-l{--kt:var(--l-t);--k:var(--l)}
+.cat.k-o{--kt:var(--o-t);--k:var(--o)}
 ol.rank{list-style:none;margin:0;padding:0;counter-reset:rk}
-ol.rank li{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #e3e3e3;counter-increment:rk}
-ol.rank li::before{content:counter(rk);flex:none;width:22px;height:22px;border-radius:50%;background:#f0f0f0;color:#444;font-size:.8rem;font-weight:700;display:flex;align-items:center;justify-content:center}
-ol.rank .nm{flex:1;min-width:0}
-ol.rank .ct{flex:none;font-weight:700;color:#1a1a1a}
-ol.rank a{text-decoration:none;color:#0b4fa3}
+ol.rank li{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--hair);counter-increment:rk}
+ol.rank li::before{content:counter(rk);flex:none;width:24px;height:24px;border-radius:50%;background:var(--soft);color:var(--mute);font-size:.78rem;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:var(--display)}
+ol.rank .nm{flex:1;min-width:0;font-weight:600}
+ol.rank .ct{flex:none;font-weight:800;color:var(--ink);font-family:var(--display)}
+ol.rank a{text-decoration:none;color:var(--ink)}
+ol.rank a:hover{color:var(--b)}
+ol.rankav{list-style:none;margin:0;padding:0}
+ol.rankav li{display:grid;grid-template-columns:34px 1fr auto;grid-template-rows:auto auto;gap:3px 12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--hair)}
+ol.rankav li .ava{grid-row:1/3}
+ol.rankav li .nm{grid-column:2;grid-row:1;font-weight:600;text-decoration:none;color:var(--ink);min-width:0}
+ol.rankav li .nm:hover{color:var(--b)}
+ol.rankav li .ct{grid-column:3;grid-row:1;font-family:var(--display);font-weight:800;color:var(--ink)}
+ol.rankav li .br{grid-column:2/4;grid-row:2;height:6px;background:var(--soft);border-radius:3px;overflow:hidden;margin-top:2px}
+ol.rankav li .br i{display:block;height:100%;background:var(--b);border-radius:3px}
 button.rankbtn{display:flex;width:100%;text-align:left;background:none;border:0;font:inherit;padding:0;cursor:pointer;color:inherit}
-@media (max-width:420px){.counters{grid-template-columns:1fr 1fr}}
+@media (max-width:420px){.cats{grid-template-columns:1fr 1fr}}
 button.link,button.tab{font:inherit;cursor:pointer}
-button.link{background:none;border:0;color:#0b4fa3;text-decoration:underline;padding:6px 0}
-.back{display:inline-block;margin:14px 0 4px;padding:8px 0}
+button.link{background:none;border:0;color:var(--b);text-decoration:underline;padding:6px 0}
+.back{display:inline-block;margin:14px 0 4px;padding:8px 0;color:var(--mute);text-decoration:none;font-size:.92rem}
 table{border-collapse:collapse;width:100%;font-size:.95rem}
-th,td{border-bottom:1px solid #e3e3e3;padding:7px 4px;text-align:left;vertical-align:top}
-th{font-weight:600;background:#fafafa}
+th,td{border-bottom:1px solid var(--hair);padding:9px 4px;text-align:left;vertical-align:top}
+th{font-weight:700;background:var(--soft)}
 td.n,th.n{text-align:right;white-space:nowrap}
 .cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.card{border:1px solid #cfcfcf;border-radius:8px;padding:10px 12px}
-.card .big{font-size:1.7rem;font-weight:700;line-height:1.1}
-.card .big a{text-decoration:none}
-.card .lab{font-size:.9rem;color:#444}
-details{border:1px solid #cfcfcf;border-radius:8px;padding:8px 12px;margin:10px 0}
-summary{cursor:pointer;font-weight:600;padding:4px 0}
-.tabs{display:flex;gap:6px;margin:14px 0 0;border-bottom:2px solid #ddd}
-button.tab{flex:1;padding:11px 4px;border:0;background:#fff;border-bottom:3px solid transparent;margin-bottom:-2px;font-size:1rem;color:#1a1a1a}
-button.tab[aria-selected=true]{border-bottom-color:#0b4fa3;font-weight:700}
-.row{padding:10px 0;border-bottom:1px solid #e3e3e3}
+.card{background:var(--soft);border-radius:14px;padding:12px 14px}
+.card .big{font-family:var(--display);font-weight:800;font-size:1.6rem;line-height:1.1}
+.card .big a{text-decoration:none;color:inherit}
+.card .lab{font-size:.88rem;color:var(--mute)}
+details{border:1px solid var(--hair);border-radius:14px;padding:10px 14px;margin:10px 0}
+summary{cursor:pointer;font-weight:700;padding:4px 0}
+.tabs{display:flex;gap:6px;margin:16px 0 0;border-bottom:2px solid var(--hair)}
+button.tab{flex:1;padding:12px 4px;border:0;background:#fff;border-bottom:3px solid transparent;margin-bottom:-2px;font-size:1rem;color:var(--ink);font-weight:600}
+button.tab[aria-selected=true]{border-bottom-color:var(--ink);font-weight:800}
+.row{padding:11px 0;border-bottom:1px solid var(--hair)}
 .row .t{font-weight:600}
-.pill{display:inline-block;border:1px solid #999;border-radius:12px;padding:0 9px;font-size:.88rem;margin-left:6px;white-space:nowrap}
-footer{padding-bottom:40px;margin-top:30px;border-top:1px solid #ddd;padding-top:14px;font-size:.92rem}
+footer{padding-bottom:40px;margin-top:30px;border-top:1px solid var(--hair);padding-top:16px;font-size:.92rem;color:var(--mute)}
 .hide{display:none}
 .ement{text-transform:lowercase}.ement::first-letter{text-transform:uppercase}
-input.f{width:100%;font-size:1rem;padding:10px;border:1px solid #888;border-radius:8px;margin:8px 0}
-@media (max-width:420px){body{font-size:16.5px}.cards{grid-template-columns:1fr 1fr}}
+input.f{width:100%;font-size:1rem;padding:12px;border:1px solid var(--hair);border-radius:14px;margin:8px 0;background:var(--soft)}
+@media (max-width:420px){body{font-size:16.5px}.cards{grid-template-columns:1fr 1fr}h1.brand{font-size:1.7rem}}
 </style>
 </head>
 <body>
 <header>
-  <h1>O que cada vereador do Rio fez</h1>
-  <p class="muted" style="margin:0">Dados oficiais da Câmara Municipal do Rio de Janeiro, de {{PERIODO}}. Coletados em {{DATA}}. Cada número tem um link para a fonte.</p>
+  <h1 class="brand">DE OLHO<br><em>NO RIO</em></h1>
+  <div class="live"><i></i>Dados oficiais da Câmara, coletados em {{DATA}}</div>
+  <p class="sub">O que cada vereador do Rio de Janeiro fez desde {{PERIODO}}, direto dos registros oficiais da Câmara. Cada número tem um link para a fonte.</p>
 </header>
 <main id="app"></main>
 <footer>
@@ -129,20 +166,25 @@ function sumP(i,from,to){var f=0,a=0;for(var k=from;k<=to;k++){var c=pres[i][k];
 function yearIdx(y){var a=[],b=[];months.forEach(function(m,k){if(m[0]===y)a.push(k)});return[a[0],a[a.length-1]]}
 function fmt(n){return n.toLocaleString("pt-BR")}
 function sumYY(a){return (a&&a[0]||0)+(a&&a[1]||0)}
+var KCLASS={bairro:'b',perguntas:'c',homenagem:'h',lei:'l',outros:'o'};
+var KICON={bairro:'📍',perguntas:'❓',homenagem:'🏅',lei:'📄',outros:'⋯'};
+function avaOr(i){return ava(i,false)||'<span class="ava"></span>'}
 function countersHtml(){
  var gt=RANK.groupTotals,total=0;Object.keys(gt).forEach(function(k){total+=sumYY(gt[k])});
  var order=["bairro","perguntas","homenagem","lei","outros"];
- var h='<h2>Em números</h2><p class="muted" style="margin:0 0 8px">Soma de todas as propostas de {{PERIODO_CURTO}}, pelos mesmos grupos usados nas páginas de cada vereador.</p>';
- h+='<div class="counters"><div class="c"><div class="big">'+fmt(total)+'</div><div class="lab">propostas ao todo</div></div>';
- order.forEach(function(k){h+='<div class="c"><div class="big">'+fmt(sumYY(gt[k]))+'</div><div class="lab">'+GNAME[k]+'</div></div>'});
+ var h='<div class="meter"><span class="ml">Em números</span><span class="mv">'+fmt(total)+'</span><span class="ms">propostas ao todo de {{PERIODO_CURTO}}, pelos mesmos grupos usados nas páginas de cada vereador.</span></div>';
+ h+='<div class="cats">';
+ order.forEach(function(k){h+='<div class="cat k-'+KCLASS[k]+'"><div class="ci">'+KICON[k]+'</div><div class="cv">'+fmt(sumYY(gt[k]))+'</div><div class="cn">'+GNAME[k]+'</div></div>'});
  h+='</div>';
  if(RANK.topVereadores.length){
+  var max=RANK.topVereadores[0][1]||1;
   h+='<h3>Quem mais apresentou propostas</h3><p class="muted" style="margin:0 0 6px">Contagem simples de propostas de {{PERIODO_CURTO}}. Mais propostas não quer dizer melhor trabalho: formas de atuar são diferentes, e isto não é uma nota.</p>';
-  h+='<ol class="rank">'+RANK.topVereadores.map(function(p){return '<li><a class="nm" href="#v'+p[0]+'">'+esc(nice(NAMES[p[0]]))+'</a><span class="ct">'+fmt(p[1])+'</span></li>'}).join('')+'</ol>';
+  h+='<ol class="rankav">'+RANK.topVereadores.map(function(p){var pct=Math.max(4,Math.round(p[1]/max*100));
+   return '<li>'+avaOr(p[0])+'<a class="nm" href="#v'+p[0]+'">'+esc(nice(NAMES[p[0]]))+'</a><span class="ct">'+fmt(p[1])+'</span><div class="br"><i style="width:'+pct+'%"></i></div></li>'}).join('')+'</ol>';
  }
  if(RANK.topBairros.length){
   h+='<h3>Bairros mais citados nos pedidos</h3><p class="muted" style="margin:0 0 6px">Quantas vezes o bairro aparece no texto das indicações (pedidos de serviço e obra). Toque num bairro para ver os pedidos.</p>';
-  h+='<ol class="rank">'+RANK.topBairros.map(function(p){return '<li><button class="rankbtn nm" data-b="'+esc(p[0])+'">'+esc(nice(p[0]))+'</button><span class="ct">'+fmt(p[1])+'</span></li>'}).join('')+'</ol>';
+  h+='<ol class="rank">'+RANK.topBairros.map(function(p){return '<li><button class="rankbtn nm" data-b="'+esc(p[0])+'">📍 '+esc(nice(p[0]))+'</button><span class="ct">'+fmt(p[1])+'</span></li>'}).join('')+'</ol>';
  }
  if(RANK.topCats.length){
   h+='<h3>O que mais pedem</h3><p class="muted" style="margin:0 0 6px">Tipo de serviço ou obra pedido nas indicações, por palavras do texto oficial.</p>';
@@ -153,8 +195,8 @@ function home(){
  var cur=order.filter(isCurrent),old=order.filter(function(i){return!isCurrent(i)});
  var h='<div class="box"><h2>Como ler</h2><p style="margin:0 0 8px">Escolha um vereador na lista. Você verá três coisas, tiradas dos registros da Câmara:</p><ul style="margin:0 0 8px;padding-left:20px"><li><strong>Faltas</strong>: quantas vezes faltou às sessões, mês a mês.</li><li><strong>Propostas</strong>: o que apresentou, em palavras simples.</li><li><strong>Votos</strong>: como votou quando o voto de cada um foi registrado.</li></ul><p class="muted" style="margin:0">A ordem das listas é sempre alfabética. Este site não faz ranking nem avalia ninguém.</p></div>';
  h+=countersHtml();
- h+='<a href="#busca" style="display:block;border:2px solid #0b4fa3;border-radius:8px;padding:14px;margin:14px 0;text-decoration:none"><strong>Buscar por bairro ou rua →</strong><br><span class="muted">Veja tudo o que foi pedido para o seu bairro ou rua e por quem.</span></a>';
- h+='<label for="q"><strong>Procurar vereador</strong></label><input id="q" type="search" placeholder="Digite o nome" autocomplete="off">';
+ h+='<a href="#busca" style="display:block;border:2px solid var(--ink);border-radius:16px;padding:16px;margin:14px 0;text-decoration:none;color:var(--ink);box-shadow:var(--shadow)"><strong style="font-family:var(--display)">Buscar por bairro ou rua →</strong><br><span class="muted">Veja tudo o que foi pedido para o seu bairro ou rua e por quem.</span></a>';
+ h+='<label for="q"><strong>Procurar vereador</strong></label><div class="search"><span class="sic">🔎</span><input id="q" type="search" placeholder="Digite o nome" autocomplete="off"></div>';
  var parties=[];cur.concat(old).forEach(function(i){var p=EXTRA[i]&&EXTRA[i].partido;if(p&&parties.indexOf(p)<0)parties.push(p)});
  parties.sort(function(a,b){return a.localeCompare(b,"pt")});
  h+='<label for="pf"><strong>Filtrar por partido</strong></label><select id="pf"><option value="">Todos os partidos</option>'+parties.map(function(p){return '<option value="'+esc(p)+'">'+esc(p)+'</option>'}).join('')+'</select>';
@@ -270,7 +312,7 @@ function authors(ids){return ids.map(function(i){return esc(nice(NAMES[i]))}).jo
 function itemHtml(r){return '<div class="row"><div class="t">'+(r[1]?A(DOCB+'scpro.nsf/'+r[1]+'?OpenDocument',esc(r[0])):esc(r[0]))+' <span class="muted">· '+(r[3]||'sem data')+'</span><span class="pill">'+esc(CATN[r[5]])+'</span></div><div class="ement">'+esc(r[2])+'</div><div class="muted">Pedido por: '+authors(r[4])+'</div></div>'}
 function searchView(prefill){
  var h='<a class="back" href="#">← Voltar à lista de vereadores</a><h2 style="margin-top:6px">Buscar por bairro ou rua</h2>';
- h+='<div class="box" style="border-color:#b26a00"><strong>Leia antes.</strong> Pedido repetido não prova que a Prefeitura ignorou o pedido. Aqui só aparece o que os vereadores pediram e quando. A Câmara não publica nesta lista se o serviço foi feito, se a Prefeitura respondeu ou se o problema voltou depois de resolvido. Vários vereadores podem pedir a mesma coisa, e um mesmo vereador pode pedir de novo por causa de um problema novo ou de outro trecho da rua.</div>';
+ h+='<div class="box" style="border-color:var(--c)"><strong>Leia antes.</strong> Pedido repetido não prova que a Prefeitura ignorou o pedido. Aqui só aparece o que os vereadores pediram e quando. A Câmara não publica nesta lista se o serviço foi feito, se a Prefeitura respondeu ou se o problema voltou depois de resolvido. Vários vereadores podem pedir a mesma coisa, e um mesmo vereador pode pedir de novo por causa de um problema novo ou de outro trecho da rua.</div>';
  h+='<label for="sq"><strong>Digite o bairro ou a rua</strong></label><input id="sq" class="f" type="search" placeholder="Ex.: Rocha Miranda, Rua dos Diamantes" autocomplete="off">';
  h+='<label for="sc" class="muted">Tipo de pedido</label><select id="sc" class="f"><option value="-1">Todos os tipos</option></select>';
  h+='<div id="sst" class="muted">Carregando os pedidos…</div><div id="srep"></div><div id="sres"></div>';
