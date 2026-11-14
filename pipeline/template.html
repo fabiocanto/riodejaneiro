@@ -18,6 +18,7 @@ h3{font-size:1.05rem;margin:20px 0 6px}
 .box{border:1px solid #cfcfcf;border-radius:8px;padding:12px 14px;margin:14px 0;background:#fff}
 .box h2,.box h3{margin-top:0}
 input[type=search]{width:100%;font-size:1.05rem;padding:12px;border:1px solid #888;border-radius:8px;margin:8px 0 4px}
+select#pf{width:100%;font-size:1.05rem;padding:12px;border:1px solid #888;border-radius:8px;margin:4px 0 14px;background:#fff}
 ul.list{list-style:none;margin:0;padding:0}
 ul.list li{border-bottom:1px solid #e3e3e3}
 ul.list a{display:flex;align-items:center;gap:10px;padding:10px 4px;text-decoration:none;color:#0b4fa3;font-size:1.05rem}
@@ -154,18 +155,23 @@ function home(){
  h+=countersHtml();
  h+='<a href="#busca" style="display:block;border:2px solid #0b4fa3;border-radius:8px;padding:14px;margin:14px 0;text-decoration:none"><strong>Buscar por bairro ou rua →</strong><br><span class="muted">Veja tudo o que foi pedido para o seu bairro ou rua e por quem.</span></a>';
  h+='<label for="q"><strong>Procurar vereador</strong></label><input id="q" type="search" placeholder="Digite o nome" autocomplete="off">';
+ var parties=[];cur.concat(old).forEach(function(i){var p=EXTRA[i]&&EXTRA[i].partido;if(p&&parties.indexOf(p)<0)parties.push(p)});
+ parties.sort(function(a,b){return a.localeCompare(b,"pt")});
+ h+='<label for="pf"><strong>Filtrar por partido</strong></label><select id="pf"><option value="">Todos os partidos</option>'+parties.map(function(p){return '<option value="'+esc(p)+'">'+esc(p)+'</option>'}).join('')+'</select>';
  h+='<ul class="list" id="lst"></ul>';
  h+='<details><summary>Ex-vereadores e suplentes que aparecem nos dados ('+old.length+')</summary><p class="muted">Nomes que constam nas listas oficiais do período, mas que não estavam na lista de {{ULTIMO_MES}}.</p><ul class="list" id="lst2"></ul></details>';
  h+='<details><summary>O que este site não mostra</summary><ul style="padding-left:20px"><li>A Câmara não publica a presença em cada sessão. Só publica o número de faltas por mês.</li><li>Na maior parte das votações, o plenário vota por “votação simbólica”: ninguém registra o voto de cada vereador. Só as votações nominais aparecem aqui.</li><li>Quando o nome de um vereador não está na lista de uma votação, o site escreve “não consta na lista”. Os registros não dizem o motivo.</li><li>'+D.dropped+' votações nominais foram deixadas de fora porque a lista de nomes não bateu com o total de votos informado no texto oficial.</li><li>Os votos em que um vereador pediu para registrar sua posição numa votação simbólica não estão nesta primeira versão.</li><li>A Câmara não tinha tabela de faltas publicada para estes meses, e por isso eles ficam de fora: {{MESES_SEM}}.</li></ul></details>';
  app.innerHTML=h;
  app.querySelectorAll('button.rankbtn[data-b]').forEach(function(b){b.onclick=function(){location.hash='#busca:'+encodeURIComponent(b.dataset.b)}});
  function fill(el,arr){el.innerHTML=arr.map(function(i){return '<li><a href="#v'+i+'">'+ava(i,false)+'<span class="vname">'+esc(nice(NAMES[i]))+' '+pills(i)+'</span></a></li>'}).join("")}
- var l1=document.getElementById("lst"),l2=document.getElementById("lst2");
- fill(l1,cur);fill(l2,old);
- document.getElementById("q").addEventListener("input",function(e){var q=norm(e.target.value.trim());
-  fill(l1,cur.filter(function(i){return norm(NAMES[i]).indexOf(q)>-1}));
-  fill(l2,old.filter(function(i){return norm(NAMES[i]).indexOf(q)>-1}));
-  if(q){l2.parentNode.open=true}});
+ var l1=document.getElementById("lst"),l2=document.getElementById("lst2"),pf=document.getElementById("pf");
+ function apply(){var q=norm(document.getElementById("q").value.trim()),p=pf.value;
+  function match(i){if(q&&norm(NAMES[i]).indexOf(q)<0)return false;if(p&&(!EXTRA[i]||EXTRA[i].partido!==p))return false;return true}
+  fill(l1,cur.filter(match));fill(l2,old.filter(match));
+  if((q||p)&&l2.children.length){l2.parentNode.open=true}}
+ apply();
+ document.getElementById("q").addEventListener("input",apply);
+ pf.addEventListener("change",apply);
  window.scrollTo(0,0);
 }
 function exportUrl(m){return "https://www.camara.rio/includes_php/vereadores_frequencia_excel.php?ano="+m[0]+"&mes="+m[1]}
