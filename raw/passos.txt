@@ -28,3 +28,5 @@ validacao inicio 16:23:40
 validacao ok 16:23:41
 inicio 16:27:52
 presenca inicio 16:27:52
+inicio 17:01:24
+presenca inicio 17:01:24
