@@ -6,4 +6,4 @@ Traceback (most recent call last):
                  ^^^^^^^^^^^^^^^^^^^^
   File "/home/runner/work/riodejaneiro/riodejaneiro/pipeline/common.py", line 29, in get
     raise RuntimeError('falha ao baixar %s: %s' % (url, last))
-RuntimeError: falha ao baixar https://www.camara.rio/includes_php/vereadores_frequencia_excel.php?ano=2025&mes=1: HTTPSConnectionPool(host='www.camara.rio', port=443): Max retries exceeded with url: /includes_php/vereadores_frequencia_excel.php?ano=2025&mes=1 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.camara.rio', port=443) at 0x7beebf0f2300>, 'Connection to www.camara.rio timed out. (connect timeout=10)'))
+RuntimeError: falha ao baixar https://www.camara.rio/includes_php/vereadores_frequencia_excel.php?ano=2025&mes=1: HTTPSConnectionPool(host='www.camara.rio', port=443): Max retries exceeded with url: /includes_php/vereadores_frequencia_excel.php?ano=2025&mes=1 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.camara.rio', port=443) at 0x7f1906789e50>, 'Connection to www.camara.rio timed out. (connect timeout=10)'))
