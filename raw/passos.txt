@@ -12,3 +12,5 @@ inicio 13:23:52
 presenca inicio 13:23:52
 inicio 14:34:39
 presenca inicio 14:34:39
+inicio 14:39:41
+presenca inicio 14:39:41
