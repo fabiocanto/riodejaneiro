@@ -69,6 +69,7 @@ def main(raw, out, hoje):
     json.dump(ind, open(os.path.join(out, 'data', 'ind.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
     json.dump(rep, open(os.path.join(out, 'data', 'rep.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
     open(os.path.join(out, '.nojekyll'), 'w').write('')
+    open(os.path.join(out, 'CNAME'), 'w').write('carrapeta.com.br\n')
     json.dump({'meta': meta, 'D_keys': list(D)}, open(os.path.join(raw, 'build_info.json'), 'w'))
     return D
 
