@@ -6,7 +6,7 @@ Cada número tem um link para a fonte. O site não dá nota nem opina.
 
 ## Como o site se atualiza sozinho
 
-O fluxo `.github/workflows/atualizar.yml` roda **todo dia às 02:17 (Brasília)** e também pode ser disparado
+O fluxo `.github/workflows/atualizar.yml` roda **todo dia às 05:47 (Brasília)** — de madrugada, mas fora da janela (0h–4h) em que os servidores da Câmara costumam ficar fora do ar — e também pode ser disparado
 à mão em *Actions → Atualizar site → Run workflow*.
 
 1. **Coleta de novo** na Câmara (`pipeline/collect_*.py`): faltas mensais, listas de proposições e transcrições de votações nominais.

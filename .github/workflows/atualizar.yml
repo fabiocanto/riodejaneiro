@@ -1,6 +1,7 @@
 name: Atualizar site
 
-# Todo dia às 02:17 (horário de Brasília = 05:17 UTC) o robô coleta os dados oficiais de novo,
+# Todo dia às 05:47 (horário de Brasília = 08:47 UTC) o robô coleta os dados oficiais de novo.
+# O horário evita a madrugada 0h–4h, em que os servidores da Câmara costumam não responder.
 # confere se vieram completos e normais e, só se passar, publica o site.
 # Se a conferência reprovar, NADA é publicado: o site continua na última versão boa
 # e este fluxo fica vermelho (o GitHub avisa por e-mail).
@@ -9,7 +10,7 @@ on:
     branches: [main]
     paths: ['.github/workflows/**', 'pipeline/**', 'tests/**']
   schedule:
-    - cron: '17 5 * * *'
+    - cron: '47 8 * * *'
   workflow_dispatch:
     inputs:
       aceitar:
