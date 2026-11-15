@@ -28,7 +28,10 @@ h1.brand em{color:var(--red);font-style:normal}
 .live i{width:9px;height:9px;border-radius:50%;background:var(--red);display:inline-block;flex:none}
 h2{font-family:var(--display);font-size:1.4rem;margin:30px 0 8px;line-height:1.25;font-weight:800;letter-spacing:-.01em}
 h3{font-size:1.05rem;margin:20px 0 6px;font-weight:700}
-.sub{color:var(--mute);margin:0 0 10px;font-size:.98rem;max-width:58ch}
+.sub{color:var(--ink);margin:0 0 16px;font-size:clamp(1.05rem,1.5vw + .8rem,1.22rem);line-height:1.45;max-width:46ch}
+.sub b{font-weight:800}
+.calcada{height:13px;margin:18px 0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='13'%3E%3Cpath d='M0,6.5 C10,-1 10,14 20,6.5 C30,-1 30,14 40,6.5' stroke='%230f1720' stroke-width='5' fill='none'/%3E%3C/svg%3E");background-repeat:repeat-x;background-size:40px 13px;opacity:.9}
+@media (max-width:420px){.calcada{background-size:30px 10px;height:10px}}
 .muted{color:var(--mute);font-size:.92rem}
 .box{border:1px solid var(--hair);border-radius:16px;padding:14px 16px;margin:14px 0;background:var(--paper);box-shadow:var(--shadow)}
 .box h2,.box h3{margin-top:0}
@@ -89,6 +92,7 @@ ul.lims .lb i{display:block;height:100%;border-radius:4px;background:var(--b)}
 ul.lims .lmax{font-size:.78rem;color:var(--mute);margin-top:3px}
 button.rankbtn{display:flex;width:100%;text-align:left;background:none;border:0;font:inherit;padding:0;cursor:pointer;color:inherit}
 @media (max-width:420px){.cats{grid-template-columns:1fr 1fr}}
+@media (min-width:640px){.cats{grid-template-columns:repeat(5,1fr)}.cat .cv{font-size:1.5rem}}
 button.link,button.tab{font:inherit;cursor:pointer}
 button.link{background:none;border:0;color:var(--b);text-decoration:underline;padding:6px 0}
 .back{display:inline-block;margin:14px 0 4px;padding:8px 0;color:var(--mute);text-decoration:none;font-size:.92rem}
@@ -119,13 +123,14 @@ input.f{width:100%;font-size:1rem;padding:12px;border:1px solid var(--hair);bord
 <header>
   <h1 class="brand">DE OLHO<br><em>NO RIO</em></h1>
   <div class="live"><i></i>Dados oficiais da Câmara, coletados em {{DATA}}</div>
-  <p class="sub">O que cada vereador do Rio de Janeiro fez desde {{PERIODO}}, direto dos registros oficiais da Câmara. Cada número tem um link para a fonte.</p>
+  <p class="sub"><b>De olho na Câmara carioca.</b> O que cada vereador do Rio de Janeiro fez desde {{PERIODO}}, direto dos registros oficiais da Câmara. Cada número tem um link para a fonte.</p>
   <div class="meter">
     <span class="ml">Salário pago aos 51 vereadores desde a posse</span>
     <b class="mv num" id="tick">R$&nbsp;0,00</b>
     <span class="ms">e subindo agora · estimativa: 51 salários de R$ 19.127,52 por mês desde 1º de janeiro de 2025</span>
   </div>
 </header>
+<div class="calcada" aria-hidden="true"></div>
 <main id="app"></main>
 <footer>
   <p><strong>Sobre este site.</strong> Ele só reúne dados publicados pela Câmara em <a href="https://www.camara.rio">camara.rio</a>. Não dá nota, não compara vereadores e não opina. Pode haver erros de leitura: confira sempre no link oficial.</p>
