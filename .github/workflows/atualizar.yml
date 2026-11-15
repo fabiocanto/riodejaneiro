@@ -18,10 +18,6 @@ on:
         description: 'Aceitar divergências de votos contra a última versão boa (use só depois de ler o relatório)'
         type: boolean
         default: false
-      usar_coleta_manual:
-        description: 'Temporário: usar dados já coletados em bootstrap_raw/ em vez de coletar de novo (só para publicar uma mudança de template)'
-        type: boolean
-        default: false
 
 permissions:
   contents: write     # gravar a nova "última versão boa" em baseline/
@@ -79,18 +75,7 @@ jobs:
           cp baseline/canon.json raw/canon.json
           cp baseline/votos_cache.json raw/votos_cache.json
 
-      - name: Usar coleta manual (bootstrap temporário)
-        if: ${{ github.event.inputs.usar_coleta_manual == 'true' }}
-        run: |
-          cp bootstrap_raw/presenca.json raw/presenca.json
-          cp bootstrap_raw/props.json raw/props.json
-          cp bootstrap_raw/props_estat.json raw/props_estat.json
-          cp bootstrap_raw/votos.json raw/votos.json
-          cp bootstrap_raw/votos_cache.json raw/votos_cache.json
-          echo "bootstrap manual usado $(date -u +%T)" >> raw/passos.txt
-
       - name: Coletar presença (faltas por mês)
-        if: ${{ github.event.inputs.usar_coleta_manual != 'true' }}
         timeout-minutes: 15
         run: |
           echo "presenca inicio $(date -u +%T)" >> raw/passos.txt
@@ -98,7 +83,6 @@ jobs:
           echo "presenca ok $(date -u +%T)" >> raw/passos.txt
 
       - name: Coletar propostas
-        if: ${{ github.event.inputs.usar_coleta_manual != 'true' }}
         timeout-minutes: 45
         run: |
           echo "props inicio $(date -u +%T)" >> raw/passos.txt
@@ -106,7 +90,6 @@ jobs:
           echo "props ok $(date -u +%T)" >> raw/passos.txt
 
       - name: Coletar votações
-        if: ${{ github.event.inputs.usar_coleta_manual != 'true' }}
         timeout-minutes: 45
         run: |
           echo "votos inicio $(date -u +%T)" >> raw/passos.txt
