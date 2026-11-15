@@ -52,3 +52,5 @@ inicio 00:04:15
 presenca inicio 00:04:15
 inicio 00:08:41
 presenca inicio 00:08:41
+inicio 00:28:59
+presenca inicio 00:28:59
