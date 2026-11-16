@@ -1,0 +1,346 @@
+[
+ {
+  "id": "0f9abb8494808f1303258ea4005f430b",
+  "code": "?",
+  "date": "11/03/26",
+  "motivo": [
+   "S: 19 nomes para 18 declarados; desconhecidos=[]"
+  ]
+ },
+ {
+  "id": "019c0049809d535903258e9d005db176",
+  "code": "?",
+  "date": "10/27/26",
+  "motivo": [
+   "N: 28 nomes para 29 declarados; desconhecidos=[]"
+  ]
+ },
+ {
+  "id": "debbf35ab1441c8003258df4004930df",
+  "code": "?",
+  "date": "05/12/26",
+  "motivo": [
+   "N: 35 nomes para 35 declarados; desconhecidos=['Willian Siri']"
+  ]
+ },
+ {
+  "id": "e976628cc385c6fd03258ded00574971",
+  "code": "?",
+  "date": "05/05/26",
+  "motivo": [
+   "S: 35 nomes para 36 declarados; desconhecidos=[]"
+  ]
+ },
+ {
+  "id": "704424f3ca78e0fd03258de7005f10c4",
+  "code": "?",
+  "date": "04/28/26",
+  "motivo": [
+   "N: 29 nomes para 30 declarados; desconhecidos=['Rodrigo Vizeu  Salvino Oliveira']"
+  ]
+ },
+ {
+  "id": "779592114ddaa97303258dd1004b304e",
+  "code": "?",
+  "date": "04/07/26",
+  "motivo": [
+   "S: 37 nomes para 37 declarados; desconhecidos=['Wellington Dias']"
+  ]
+ },
+ {
+  "id": "389a19336469f37d03258dbc004aaa8f",
+  "code": "?",
+  "date": "03/19/26",
+  "motivo": [
+   "N: 31 nomes para 31 declarados; desconhecidos=['William Coelho']"
+  ]
+ },
+ {
+  "id": "f8b3622943fd73dd03258dbc004725d9",
+  "code": "?",
+  "date": "03/17/26",
+  "motivo": [
+   "S: 33 nomes para 33 declarados; desconhecidos=['Wellington Dias']"
+  ]
+ },
+ {
+  "id": "cf1fa9ca93011a2303258da80046281b",
+  "code": "?",
+  "date": "02/24/26",
+  "motivo": [
+   "N: 43 nomes para 41 declarados; desconhecidos=['não havendo voto favorável. Presentes', 'votando']"
+  ]
+ },
+ {
+  "id": "3da5ce09e81be75603258d25005f7311",
+  "code": "?",
+  "date": "10/16/25",
+  "motivo": [
+   "S: 34 nomes para 33 declarados; desconhecidos=[]"
+  ]
+ },
+ {
+  "id": "f578eb787d3121b803258d140069724f",
+  "code": "?",
+  "date": "09/30/25",
+  "motivo": [
+   "N: 12 nomes para 13 declarados; desconhecidos=[]"
+  ]
+ },
+ {
+  "id": "341589ca022b712903258d060061bf0c",
+  "code": "?",
+  "date": "09/18/25",
+  "motivo": [
+   "sem blocos de votos"
+  ]
+ },
+ {
+  "id": "94fc7fd72dfb9c6803258d0600613a31",
+  "code": "?",
+  "date": "09/16/25",
+  "motivo": [
+   "S: 43 nomes para 44 declarados; desconhecidos=[]"
+  ]
+ },
+ {
+  "id": "7b0aa3c22ea300b103258cec005fc969",
+  "code": "?",
+  "date": "08/20/25",
+  "motivo": [
+   "N: 31 nomes para 32 declarados; desconhecidos=[]"
+  ]
+ },
+ {
+  "id": "9c8a5303d443c6ca03258cdd005f7716",
+  "code": "?",
+  "date": "08/05/25",
+  "motivo": [
+   "N: 34 nomes para 35 declarados; desconhecidos=[]"
+  ]
+ },
+ {
+  "id": "d85a9de7b627ea1303258cac006e90a8",
+  "code": "?",
+  "date": "06/17/25",
+  "motivo": [
+   "sem blocos de votos"
+  ]
+ },
+ {
+  "id": "4b6326dfbbe94ad903258c8f005e6d5e",
+  "code": "?",
+  "date": "05/27/25",
+  "motivo": [
+   "N: 45 nomes para 43 declarados; desconhecidos=['não havendo voto favorável. Presentes', 'votando']"
+  ]
+ },
+ {
+  "id": "9edbbca54f41007f03258c7c005f519e",
+  "code": "?",
+  "date": "04/30/25",
+  "motivo": [
+   "N: 27 nomes para 28 declarados; desconhecidos=[]"
+  ]
+ },
+ {
+  "id": "2a1f798ec921152a03258c5f0060f7f8",
+  "code": "?",
+  "date": "04/01/25",
+  "motivo": [
+   "N: 27 nomes para 26 declarados; desconhecidos=[]"
+  ]
+ },
+ {
+  "id": "48388265e745406503258c5f0060477c",
+  "code": "?",
+  "date": "04/01/25",
+  "motivo": [
+   "N: 25 nomes para 26 declarados; desconhecidos=['Fernando Armelau Flavio Pato']"
+  ]
+ },
+ {
+  "id": "b14def7038b8b41a03258c5a005eed27",
+  "code": "?",
+  "date": "03/27/25",
+  "motivo": [
+   "sem blocos de votos"
+  ]
+ },
+ {
+  "id": "8c0eecd24a7f307703258c57005f8d52",
+  "code": "?",
+  "date": "03/25/25",
+  "motivo": [
+   "sem blocos de votos"
+  ]
+ },
+ {
+  "id": "7732bc80b6ca398503258c57005f6914",
+  "code": "?",
+  "date": "03/25/25",
+  "motivo": [
+   "N: 24 nomes para 24 declarados; desconhecidos=['e Vera Lins']"
+  ]
+ },
+ {
+  "id": "21c844781e38d52403258c4b005fb42a",
+  "code": "?",
+  "date": "03/12/25",
+  "motivo": [
+   "N: 26 nomes para 26 declarados; desconhecidos=['Pastor Deangeles Percy']"
+  ]
+ },
+ {
+  "id": "b505e92edce1159c03258c4a00694910",
+  "code": "?",
+  "date": "03/11/25",
+  "motivo": [
+   "N: 32 nomes para 32 declarados; desconhecidos=['Pastor Deangeles Percy']"
+  ]
+ },
+ {
+  "id": "7bdc47327c77aef203258c4a0069369b",
+  "code": "?",
+  "date": "03/11/25",
+  "motivo": [
+   "N: 39 nomes para 39 declarados; desconhecidos=['Pastor Deangeles Percy']"
+  ]
+ },
+ {
+  "id": "203af31a42d99ca303258c3d006117fc",
+  "code": "?",
+  "date": "02/26/25",
+  "motivo": [
+   "N: 23 nomes para 23 declarados; desconhecidos=['Pastor Deangeles Percy']"
+  ]
+ },
+ {
+  "id": "7afd2fdebe01ac7f03258c3d0060a8e4",
+  "code": "?",
+  "date": "02/26/25",
+  "motivo": [
+   "S: 36 nomes para 36 declarados; desconhecidos=['Pastor Deangeles Percy']"
+  ]
+ },
+ {
+  "id": "37d8156646cfc7d603258c3d00607671",
+  "code": "?",
+  "date": "02/26/25",
+  "motivo": [
+   "S: 16 nomes para 16 declarados; desconhecidos=['Pastor Deangeles Percy']"
+  ]
+ },
+ {
+  "id": "8ecc04f0dba7922903258c3d0068fb97",
+  "code": "?",
+  "date": "02/26/25",
+  "motivo": [
+   "sem blocos de votos"
+  ]
+ },
+ {
+  "id": "25cb786ceb55011d03258c3b006022f0",
+  "code": "?",
+  "date": "02/25/25",
+  "motivo": [
+   "N: 34 nomes para 34 declarados; desconhecidos=['Pastor Deangeles Percy']"
+  ]
+ },
+ {
+  "id": "a47bf8856df725f703258c3b0060024a",
+  "code": "?",
+  "date": "02/25/25",
+  "motivo": [
+   "N: 27 nomes para 27 declarados; desconhecidos=['Pastor Deangeles Percy']"
+  ]
+ },
+ {
+  "id": "94114cf9fedfe16403258c3b005fdb53",
+  "code": "?",
+  "date": "02/25/25",
+  "motivo": [
+   "N: 16 nomes para 16 declarados; desconhecidos=['Pastor Deangeles Percy']"
+  ]
+ },
+ {
+  "id": "d37e040263c0330703258c3b005fb4dd",
+  "code": "?",
+  "date": "02/25/25",
+  "motivo": [
+   "N: 30 nomes para 30 declarados; desconhecidos=['Pastor Deangeles Percy']"
+  ]
+ },
+ {
+  "id": "20cc095687f82e8403258c3b005f6b79",
+  "code": "?",
+  "date": "02/25/25",
+  "motivo": [
+   "N: 33 nomes para 33 declarados; desconhecidos=['Pastor Deangeles Percy']"
+  ]
+ },
+ {
+  "id": "133c90eb5357f2ff03258c3b005f34ab",
+  "code": "?",
+  "date": "02/25/25",
+  "motivo": [
+   "N: 40 nomes para 40 declarados; desconhecidos=['Pastor Deangeles Percy']"
+  ]
+ },
+ {
+  "id": "7d25ec011d9ef35003258c3500616220",
+  "code": "?",
+  "date": "02/20/25",
+  "motivo": [
+   "N: 26 nomes para 26 declarados; desconhecidos=['Pastor Deangeles Percy']"
+  ]
+ },
+ {
+  "id": "e94ae7c57475964903258c3500614545",
+  "code": "?",
+  "date": "02/20/25",
+  "motivo": [
+   "N: 26 nomes para 26 declarados; desconhecidos=['Pastor Deangeles Percy']"
+  ]
+ },
+ {
+  "id": "18a0d69ba71d3f6203258c37005f35c4",
+  "code": "?",
+  "date": "02/20/25",
+  "motivo": [
+   "N: 27 nomes para 27 declarados; desconhecidos=['Pastor Deangeles Percy']"
+  ]
+ },
+ {
+  "id": "38e02cc1a2eefd5f03258c350060d077",
+  "code": "?",
+  "date": "02/19/25",
+  "motivo": [
+   "N: 30 nomes para 30 declarados; desconhecidos=['Pastor Deangeles Percy']"
+  ]
+ },
+ {
+  "id": "89e02bb5e4d500af03258c3500609606",
+  "code": "?",
+  "date": "02/19/25",
+  "motivo": [
+   "N: 37 nomes para 37 declarados; desconhecidos=['Pastor Deangeles Percy']"
+  ]
+ },
+ {
+  "id": "e4311d69d971f46d03258c36005fbbd3",
+  "code": "?",
+  "date": "02/19/25",
+  "motivo": [
+   "N: 41 nomes para 41 declarados; desconhecidos=['Pastor Deangeles Percy']"
+  ]
+ },
+ {
+  "id": "b5ba135c760309ae03258c050048d965",
+  "code": "?",
+  "date": "01/01/25",
+  "motivo": [
+   "sem blocos de votos"
+  ]
+ }
+]
