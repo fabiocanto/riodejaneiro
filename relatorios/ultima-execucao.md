@@ -1,12 +1,23 @@
 # Relatório da coleta
 
-**Resultado: APROVADA — o site será publicado**
+**Resultado: REPROVADA — nada foi publicado; o site continua na última versão boa**
+
+## Erros (bloqueiam a publicação)
+- Votos: 439 votações (antes 508) — queda grande.
+- Votos: 116 de 437 votações já publicadas vieram diferentes (26.5%); 71 sumiram.
+- Votos: descartadas subiu de 10 para 43.
+
+## Avisos
+- Votação 924d3687 (11/03/26, 924d3687): antes S/N/A=0/31/0 veto=False; agora 0/31/0 veto=True.
+- Votação caa0ea0a (10/13/26, caa0ea0a): antes S/N/A=31/0/0 veto=False; agora 31/2/0 veto=False.
+- Votação e0dbe448 (10/06/26, e0dbe448): antes S/N/A=15/0/0 veto=False; agora 15/0/0 veto=True.
+- Votação c6fd472d (09/02/26, c6fd472d): antes S/N/A=0/26/0 veto=True; agora 0/26/0 veto=False.
+- Votação 3b41a86c (09/02/26, 3b41a86c): antes S/N/A=0/27/0 veto=True; agora 0/27/0 veto=False.
 
 ## Conferências
 - Presença: 17 meses com tabela, último = 2026-10 (51 vereadores).
 - Presença: 0 de 895 células de meses já publicados mudaram (0.0%).
-- Propostas: 60292 linhas gravadas ({0: 2760, 1: 124, 2: 5, 3: 199, 4: 8, 5: 12145, 6: 42304, 7: 1191, 8: 1556}).
+- Propostas: 60297 linhas gravadas ({0: 2764, 1: 124, 2: 5, 3: 199, 4: 8, 5: 12145, 6: 42304, 7: 1191, 8: 1557}).
 - Moções: 42304 lidas, maior número oficial 42306.
-- Votos: ? documentos de sessão listados de 2025 em diante.
-- Votos: 508 votações nominais, 10 descartadas (lista de nomes não bateu).
-- Votos: 0 de 508 votações já publicadas vieram diferentes (0.0%); 0 sumiram.
+- Votos: 4789 documentos de sessão listados de 2025 em diante.
+- Votos: 439 votações nominais, 43 descartadas (lista de nomes não bateu).
