@@ -1,0 +1,58 @@
+name: Verificar se o site está no ar
+
+# Confere periodicamente se https://carrapeta.com.br responde normalmente.
+# Isso é independente da coleta de dados: aqui só importa se o site publicado está acessível.
+on:
+  schedule:
+    - cron: '13 */2 * * *'   # a cada 2 horas
+  workflow_dispatch: {}
+
+permissions:
+  issues: write
+
+concurrency:
+  group: uptime-site
+  cancel-in-progress: true
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checar o site
+        id: check
+        run: |
+          CODE=$(curl -sS -o /tmp/body.html -w "%{http_code}" -m 20 "https://carrapeta.com.br/" || echo "000")
+          echo "código HTTP: $CODE"
+          OK=1
+          if [ "$CODE" != "200" ]; then OK=0; fi
+          if ! grep -q "De olho" /tmp/body.html 2>/dev/null; then OK=0; fi
+          echo "ok=$OK" >> "$GITHUB_OUTPUT"
+          echo "code=$CODE" >> "$GITHUB_OUTPUT"
+
+      - name: Avisar que o site caiu
+        if: steps.check.outputs.ok == '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh label create site-fora-do-ar --repo "$GITHUB_REPOSITORY" --color b60205 --description "O site carrapeta.com.br não respondeu normalmente" --force
+          RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          N=$(gh issue list --repo "$GITHUB_REPOSITORY" --label site-fora-do-ar --state open --json number --jq length)
+          if [ "$N" = "0" ]; then
+            gh issue create --repo "$GITHUB_REPOSITORY" --label site-fora-do-ar \
+              --title "🔴 carrapeta.com.br não respondeu normalmente" \
+              --body "Código HTTP recebido: ${{ steps.check.outputs.code }}. Detalhes: $RUN_URL"
+          else
+            NUM=$(gh issue list --repo "$GITHUB_REPOSITORY" --label site-fora-do-ar --state open --json number --jq '.[0].number')
+            gh issue comment "$NUM" --repo "$GITHUB_REPOSITORY" --body "Ainda fora do ar (HTTP ${{ steps.check.outputs.code }}): $RUN_URL"
+          fi
+
+      - name: Fechar aviso quando o site voltar
+        if: steps.check.outputs.ok == '1'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for NUM in $(gh issue list --repo "$GITHUB_REPOSITORY" --label site-fora-do-ar --state open --json number --jq '.[].number' 2>/dev/null); do
+            gh issue comment "$NUM" --repo "$GITHUB_REPOSITORY" --body "✅ Voltou ao normal: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+            gh issue close "$NUM" --repo "$GITHUB_REPOSITORY"
+          done

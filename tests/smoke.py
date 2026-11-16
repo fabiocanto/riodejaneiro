@@ -19,6 +19,12 @@ with sync_playwright() as p:
     pg.goto(base); pg.wait_for_selector('ul#lst li')
     n = pg.locator('ul#lst li').count() + pg.locator('ul#lst2 li').count()
     assert n == 60, 'lista de vereadores com %d nomes' % n
+    sw = pg.evaluate('document.documentElement.scrollWidth')
+    cw = pg.evaluate('document.documentElement.clientWidth')
+    assert sw <= cw + 1, 'rolagem horizontal na tela estreita: scrollWidth=%d clientWidth=%d' % (sw, cw)
+    for caminho in ('assets/favicon.svg', 'assets/og-image.png', 'robots.txt', 'sitemap.xml'):
+        r = pg.request.get(base + caminho)
+        assert r.status == 200, '%s respondeu %d' % (caminho, r.status)
     pg.goto(base + '#v43'); pg.wait_for_selector('button[data-t=r]')
     assert 'Faltas' in pg.inner_text('#s-p')
     pg.click('button[data-t=r]'); pg.click('details.gd >> nth=2'); pg.wait_for_timeout(500)

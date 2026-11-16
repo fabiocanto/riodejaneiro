@@ -4,18 +4,51 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>De olho no Rio — o que cada vereador fez</title>
+<meta name="description" content="O que cada vereador do Rio de Janeiro fez desde {{PERIODO}}, direto dos registros oficiais da Câmara Municipal. Faltas, propostas e votações, com link para a fonte em cada número.">
+<link rel="canonical" href="https://carrapeta.com.br/">
+<meta name="robots" content="index, follow">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1720" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="De olho no Rio">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:url" content="https://carrapeta.com.br/">
+<meta property="og:title" content="De olho no Rio — o que cada vereador fez">
+<meta property="og:description" content="O que cada vereador do Rio de Janeiro fez desde {{PERIODO}}, direto dos registros oficiais da Câmara. Dados oficiais, sem opinião.">
+<meta property="og:image" content="https://carrapeta.com.br/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="De olho no Rio — o que cada vereador fez">
+<meta name="twitter:description" content="O que cada vereador do Rio de Janeiro fez desde {{PERIODO}}, direto dos registros oficiais da Câmara.">
+<meta name="twitter:image" content="https://carrapeta.com.br/assets/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box}
+:focus-visible{outline:3px solid var(--b);outline-offset:2px;border-radius:2px}
+.skip{position:absolute;left:-9999px;top:0;z-index:100;background:var(--ink);color:#fff;padding:10px 16px;border-radius:0 0 10px 0;font-weight:700;text-decoration:none}
+.skip:focus{left:0}
 :root{
  --paper:#fff;--ink:#0f1720;--mute:#5b6875;--hair:#e6eaee;--soft:#f5f7f9;
- --b:#1d5fe0;--b-t:#eaf1ff;--c:#d9580b;--c-t:#fff1e6;--h:#cf2573;--h-t:#ffeaf3;
+ --b:#1d5fe0;--b-t:#eaf1ff;--c:#d9580b;--c-t:#fff1e6;--h:#ba2167;--h-t:#ffeaf3;
  --l:#0a8a5f;--l-t:#e4f7ef;--o:#5b6875;--o-t:#eef1f4;--red:#ff3131;--ok:#0a8a5f;--bad:#d23a2e;
  --shadow:0 1px 2px rgba(15,23,32,.05),0 8px 24px -12px rgba(15,23,32,.14);
  --display:"Bricolage Grotesque","Public Sans",system-ui,sans-serif;
  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+ --meterbg:#0f1720;
+}
+@media (prefers-color-scheme:dark){
+ :root{
+  --paper:#0f1720;--ink:#eef1f4;--mute:#9aa6b1;--hair:#263241;--soft:#1a2430;
+  --b:#6ea2ff;--b-t:#16233d;--c:#ff9d5c;--c-t:#3a2412;--h:#ff6fae;--h-t:#3a1326;
+  --l:#35d399;--l-t:#0f2e20;--o:#aab4bd;--o-t:#202a33;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
+ }
+ .calcada{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='13'%3E%3Cpath d='M0,6.5 C10,-1 10,14 20,6.5 C30,-1 30,14 40,6.5' stroke='%23eef1f4' stroke-width='5' fill='none'/%3E%3C/svg%3E")}
 }
 body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.55 var(--body)}
 a{color:var(--b)}
@@ -49,11 +82,11 @@ ul.list a:hover .vname{color:var(--b)}
 .vhead{display:flex;gap:14px;align-items:flex-start;margin:10px 0 6px}
 .vhead .meta{flex:1;min-width:0;padding-top:2px}
 .vhead h2{margin:0 0 4px}
-.pill{display:inline-block;background:var(--ink);color:#fff;border-radius:6px;padding:2px 8px;font-weight:700;font-size:12px;margin:0 6px 6px 0;vertical-align:middle}
+.pill{display:inline-block;background:var(--meterbg);color:#fff;border-radius:6px;padding:2px 8px;font-weight:700;font-size:12px;margin:0 6px 6px 0;vertical-align:middle}
 .pill-c{background:var(--h-t);color:var(--h)}
 .contact{font-size:.92rem;color:var(--mute);margin:6px 0 0}
 .contact a{color:var(--b)}
-.meter{background:var(--ink);color:#fff;border-radius:22px;padding:18px 20px 16px;margin:14px 0 10px}
+.meter{background:var(--meterbg);color:#fff;border-radius:22px;padding:18px 20px 16px;margin:14px 0 10px}
 .meter .ml{display:block;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#ffb3b3}
 .meter .mv{display:block;font-family:var(--display);font-weight:800;font-size:clamp(34px,10vw,56px);line-height:1.05;letter-spacing:-.03em;margin:4px 0 6px}
 .meter .ms{display:block;font-size:12.5px;color:#b9c3cc;line-height:1.35}
@@ -108,7 +141,7 @@ td.n,th.n{text-align:right;white-space:nowrap}
 details{border:1px solid var(--hair);border-radius:14px;padding:10px 14px;margin:10px 0}
 summary{cursor:pointer;font-weight:700;padding:4px 0}
 .tabs{display:flex;gap:6px;margin:16px 0 0;border-bottom:2px solid var(--hair)}
-button.tab{flex:1;padding:12px 4px;border:0;background:#fff;border-bottom:3px solid transparent;margin-bottom:-2px;font-size:1rem;color:var(--ink);font-weight:600}
+button.tab{flex:1;padding:12px 4px;border:0;background:var(--paper);border-bottom:3px solid transparent;margin-bottom:-2px;font-size:1rem;color:var(--ink);font-weight:600}
 button.tab[aria-selected=true]{border-bottom-color:var(--ink);font-weight:800}
 .row{padding:11px 0;border-bottom:1px solid var(--hair)}
 .row .t{font-weight:600}
@@ -120,6 +153,7 @@ input.f{width:100%;font-size:1rem;padding:12px;border:1px solid var(--hair);bord
 </style>
 </head>
 <body>
+<a class="skip" href="#app">Pular para o conteúdo</a>
 <header>
   <h1 class="brand">DE OLHO<br><em>NO RIO</em></h1>
   <div class="live"><i></i>Dados oficiais da Câmara, coletados em {{DATA}}</div>
@@ -131,7 +165,7 @@ input.f{width:100%;font-size:1rem;padding:12px;border:1px solid var(--hair);bord
   </div>
 </header>
 <div class="calcada" aria-hidden="true"></div>
-<main id="app"></main>
+<main id="app" tabindex="-1"></main>
 <footer>
   <p><strong>Sobre este site.</strong> Ele só reúne dados publicados pela Câmara em <a href="https://www.camara.rio">camara.rio</a>. Não dá nota, não compara vereadores e não opina. Pode haver erros de leitura: confira sempre no link oficial.</p>
   <p class="muted">Criado por Fábio Canto. O funcionamento deste site é baseado no <a href="https://radarptlandia.org/" target="_blank" rel="noopener">Radar PTlândia</a>, criado por <a href="https://www.instagram.com/eugabrieldamasceno" target="_blank" rel="noopener">eugabrieldamasceno</a> no Instagram.</p>
@@ -206,7 +240,7 @@ function countersHtml(){
  var order=["bairro","perguntas","homenagem","lei","outros"];
  var h='<div class="meter"><span class="ml">Em números</span><span class="mv">'+fmt(total)+'</span><span class="ms">propostas ao todo de {{PERIODO_CURTO}}, pelos mesmos grupos usados nas páginas de cada vereador.</span></div>';
  h+='<div class="cats">';
- order.forEach(function(k){h+='<div class="cat k-'+KCLASS[k]+'"><div class="ci">'+KICON[k]+'</div><div class="cv">'+fmt(sumYY(gt[k]))+'</div><div class="cn">'+GNAME[k]+'</div></div>'});
+ order.forEach(function(k){h+='<div class="cat k-'+KCLASS[k]+'"><div class="ci" aria-hidden="true">'+KICON[k]+'</div><div class="cv">'+fmt(sumYY(gt[k]))+'</div><div class="cn">'+GNAME[k]+'</div></div>'});
  h+='</div>';
  if(RANK.topVereadores.length){
   var max=RANK.topVereadores[0][1]||1;
@@ -248,7 +282,7 @@ function home(){
  h+=countersHtml();
  h+=contasHtml();
  h+='<a href="#busca" style="display:block;border:2px solid var(--ink);border-radius:16px;padding:16px;margin:14px 0;text-decoration:none;color:var(--ink);box-shadow:var(--shadow)"><strong style="font-family:var(--display)">Buscar por bairro ou rua →</strong><br><span class="muted">Veja tudo o que foi pedido para o seu bairro ou rua e por quem.</span></a>';
- h+='<label for="q"><strong>Procurar vereador</strong></label><div class="search"><span class="sic">🔎</span><input id="q" type="search" placeholder="Digite o nome" autocomplete="off"></div>';
+ h+='<label for="q"><strong>Procurar vereador</strong></label><div class="search"><span class="sic" aria-hidden="true">🔎</span><input id="q" type="search" placeholder="Digite o nome" autocomplete="off"></div>';
  var parties=[];cur.concat(old).forEach(function(i){var p=EXTRA[i]&&EXTRA[i].partido;if(p&&parties.indexOf(p)<0)parties.push(p)});
  parties.sort(function(a,b){return a.localeCompare(b,"pt")});
  h+='<label for="pf"><strong>Filtrar por partido</strong></label><select id="pf"><option value="">Todos os partidos</option>'+parties.map(function(p){return '<option value="'+esc(p)+'">'+esc(p)+'</option>'}).join('')+'</select>';

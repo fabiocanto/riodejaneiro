@@ -23,6 +23,7 @@ permissions:
   contents: write     # gravar a nova "última versão boa" em baseline/
   pages: write
   id-token: write
+  issues: write       # abrir/fechar o aviso de coleta falhando
 
 concurrency:
   group: atualizar-site
@@ -37,6 +38,11 @@ jobs:
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Garantir que a label de aviso existe
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh label create coleta-falhando --repo "$GITHUB_REPOSITORY" --color d73a4a --description "Coleta automática de dados falhando" --force
 
       - uses: actions/setup-python@v5
         with:
@@ -170,3 +176,29 @@ jobs:
             git commit -m "Atualiza última versão boa ($(date -u +%F)) [skip ci]"
             git push
           fi
+
+      - name: Avisar que a coleta está falhando
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          N=$(gh issue list --repo "$GITHUB_REPOSITORY" --label coleta-falhando --state open --json number --jq length)
+          if [ "$N" = "0" ]; then
+            gh issue create --repo "$GITHUB_REPOSITORY" --label coleta-falhando \
+              --title "🔴 Coleta de dados da Câmara está falhando" \
+              --body "A execução automática falhou. O site continua na última versão boa (nada quebrado), mas os dados pararam de atualizar. Detalhes da execução: $RUN_URL"
+          else
+            NUM=$(gh issue list --repo "$GITHUB_REPOSITORY" --label coleta-falhando --state open --json number --jq '.[0].number')
+            gh issue comment "$NUM" --repo "$GITHUB_REPOSITORY" --body "Falhou de novo: $RUN_URL"
+          fi
+
+      - name: Fechar aviso de falha quando a coleta normalizar
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for NUM in $(gh issue list --repo "$GITHUB_REPOSITORY" --label coleta-falhando --state open --json number --jq '.[].number'); do
+            gh issue comment "$NUM" --repo "$GITHUB_REPOSITORY" --body "✅ Voltou a funcionar nesta execução: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+            gh issue close "$NUM" --repo "$GITHUB_REPOSITORY"
+          done

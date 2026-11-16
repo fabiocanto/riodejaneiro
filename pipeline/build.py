@@ -85,6 +85,19 @@ def main(raw, out, hoje):
     json.dump(rep, open(os.path.join(out, 'data', 'rep.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
     open(os.path.join(out, '.nojekyll'), 'w').write('')
     open(os.path.join(out, 'CNAME'), 'w').write('carrapeta.com.br\n')
+    open(os.path.join(out, 'robots.txt'), 'w').write(
+        'User-agent: *\nAllow: /\nSitemap: https://carrapeta.com.br/sitemap.xml\n')
+    open(os.path.join(out, 'sitemap.xml'), 'w', encoding='utf-8').write(
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        '<url><loc>https://carrapeta.com.br/</loc><lastmod>%s</lastmod><changefreq>daily</changefreq></url>\n'
+        '</urlset>\n' % hoje.isoformat())
+    os.makedirs(os.path.join(out, 'assets'), exist_ok=True)
+    for fn in ('favicon.svg', 'og-image.png'):
+        src_f = os.path.join(os.path.dirname(__file__), '..', 'assets', fn)
+        if os.path.exists(src_f):
+            with open(src_f, 'rb') as fsrc, open(os.path.join(out, 'assets', fn), 'wb') as fdst:
+                fdst.write(fsrc.read())
     fotos_src = os.path.join(os.path.dirname(__file__), '..', 'assets', 'vereadores')
     if os.path.isdir(fotos_src):
         fotos_dst = os.path.join(out, 'assets', 'vereadores')
