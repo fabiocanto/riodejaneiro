@@ -22,7 +22,7 @@ jobs:
       - name: Checar o site
         id: check
         run: |
-          CODE=$(curl -sS -o /tmp/body.html -w "%{http_code}" -m 20 "https://carrapeta.com.br/" || echo "000")
+          CODE=$(curl -sS -L -o /tmp/body.html -w "%{http_code}" -m 20 "https://carrapeta.com.br/" || echo "000")
           echo "código HTTP: $CODE"
           OK=1
           if [ "$CODE" != "200" ]; then OK=0; fi
