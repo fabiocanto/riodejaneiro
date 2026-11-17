@@ -11,7 +11,6 @@ on:
     paths: ['.github/workflows/**', 'pipeline/**', 'tests/**']
   schedule:
     - cron: '47 8 * * *'   # execução normal de todo dia
-    - cron: '*/20 * * * *' # temporário: os servidores da Câmara estão fora do ar desde a madrugada; tenta a cada 20 min até o primeiro sucesso, depois eu removo esta linha
   workflow_dispatch:
     inputs:
       aceitar:
