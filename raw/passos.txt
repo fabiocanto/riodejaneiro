@@ -74,3 +74,5 @@ props ok 13:12:21
 votos inicio 13:12:21
 votos ok 13:14:45
 validacao inicio 13:14:45
+inicio 04:51:11
+presenca inicio 04:51:11
