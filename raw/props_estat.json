@@ -5,8 +5,8 @@
   "EmendaInt": 8,
   "DecretoInt": 207,
   "ResolucaoInt": 8,
-  "IndInt": 12171,
-  "mocaoInt": 42306,
+  "IndInt": 12203,
+  "mocaoInt": 42540,
   "ReqInfInt": 1207,
   "ReqInt": 1565
  },
@@ -62,5 +62,5 @@
   "ALEXANDRE ARRAES": 1,
   "LEONEL BRIZOLA": 1
  },
- "linhas_gravadas": 60297
+ "linhas_gravadas": 60563
 }

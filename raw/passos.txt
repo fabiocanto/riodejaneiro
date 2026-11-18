@@ -78,3 +78,11 @@ inicio 04:51:11
 presenca inicio 04:51:11
 inicio 12:36:17
 presenca inicio 12:36:17
+inicio 17:35:28
+presenca inicio 17:35:28
+presenca ok 17:36:53
+props inicio 17:36:53
+props ok 18:18:19
+votos inicio 18:18:20
+votos ok 18:20:26
+validacao inicio 18:20:26
