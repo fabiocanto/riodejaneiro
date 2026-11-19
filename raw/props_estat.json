@@ -1,14 +1,14 @@
 {
  "total_por_lista": {
-  "LeiInt": 2775,
+  "LeiInt": 2780,
   "LeiCompInt": 135,
   "EmendaInt": 8,
   "DecretoInt": 207,
   "ResolucaoInt": 8,
-  "IndInt": 12203,
-  "mocaoInt": 42540,
-  "ReqInfInt": 1207,
-  "ReqInt": 1565
+  "IndInt": 12224,
+  "mocaoInt": 42570,
+  "ReqInfInt": 1209,
+  "ReqInt": 1567
  },
  "sem_autor_conhecido": {
   "LeiInt": 11,
@@ -62,5 +62,5 @@
   "ALEXANDRE ARRAES": 1,
   "LEONEL BRIZOLA": 1
  },
- "linhas_gravadas": 60563
+ "linhas_gravadas": 60623
 }
