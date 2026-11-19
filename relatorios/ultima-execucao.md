@@ -17,7 +17,7 @@
 ## Conferências
 - Presença: 17 meses com tabela, último = 2026-10 (51 vereadores).
 - Presença: 0 de 895 células de meses já publicados mudaram (0.0%).
-- Propostas: 60563 linhas gravadas ({0: 2764, 1: 124, 2: 5, 3: 199, 4: 8, 5: 12177, 6: 42538, 7: 1191, 8: 1557}).
-- Moções: 42538 lidas, maior número oficial 42540.
-- Votos: 4800 documentos de sessão listados de 2025 em diante.
+- Propostas: 60623 linhas gravadas ({0: 2769, 1: 124, 2: 5, 3: 199, 4: 8, 5: 12198, 6: 42568, 7: 1193, 8: 1559}).
+- Moções: 42568 lidas, maior número oficial 42570.
+- Votos: 4827 documentos de sessão listados de 2025 em diante.
 - Votos: 440 votações nominais, 43 descartadas (lista de nomes não bateu).
