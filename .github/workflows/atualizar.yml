@@ -101,6 +101,29 @@ jobs:
           python pipeline/collect_votos.py baseline/canon.json raw/votos_cache.json raw/votos.json 2> raw/erro_votos.log || { cat raw/erro_votos.log; exit 1; }
           echo "votos ok $(date -u +%T)" >> raw/passos.txt
 
+      - name: Coletar dados da Prefeitura (orçamento e contratos)
+        id: prefeitura_coleta
+        timeout-minutes: 15
+        continue-on-error: true   # problema aqui não deve travar a publicação da Câmara
+        run: |
+          echo "prefeitura inicio $(date -u +%T)" >> raw/passos.txt
+          python pipeline/collect_prefeitura.py raw 2> raw/erro_prefeitura.log || { cat raw/erro_prefeitura.log; exit 1; }
+          echo "prefeitura ok $(date -u +%T)" >> raw/passos.txt
+
+      - name: Conferir a coleta da Prefeitura (trava de qualidade só dessa seção)
+        if: always()
+        continue-on-error: true   # reprovação aqui só tira a seção Prefeitura do ar, não o resto do site
+        run: python pipeline/validate_prefeitura.py raw baseline raw/relatorio_prefeitura.md
+
+      - name: Mostrar relatório da Prefeitura
+        if: always()
+        run: |
+          if [ -f raw/relatorio_prefeitura.md ]; then cat raw/relatorio_prefeitura.md >> "$GITHUB_STEP_SUMMARY"; fi
+          if [ -f raw/erro_prefeitura.log ]; then
+            echo '' >> "$GITHUB_STEP_SUMMARY"; echo '## Erro na coleta da Prefeitura' >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"; cat raw/erro_prefeitura.log >> "$GITHUB_STEP_SUMMARY"; echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
       - name: Conferir a coleta (trava de qualidade)
         id: validar
         run: |
@@ -124,7 +147,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          for f in raw/passos.txt raw/relatorio.md raw/erro_presenca.log raw/erro_props.log raw/erro_votos.log raw/props_estat.json raw/votos_debug.json; do
+          for f in raw/passos.txt raw/relatorio.md raw/erro_presenca.log raw/erro_props.log raw/erro_votos.log raw/props_estat.json raw/votos_debug.json raw/relatorio_prefeitura.md raw/erro_prefeitura.log; do
             [ -f "$f" ] && git add -f "$f" || true
           done
           git commit -q -m "estado da execução $(date -u +%FT%TZ)" || true
@@ -135,6 +158,7 @@ jobs:
         run: |
           mkdir -p relatorios
           cp raw/relatorio.md relatorios/ultima-execucao.md 2>/dev/null || true
+          cp raw/relatorio_prefeitura.md relatorios/ultima-execucao-prefeitura.md 2>/dev/null || true
           cp raw/props_estat.json relatorios/ 2>/dev/null || true
           cp raw/votos_debug.json relatorios/ 2>/dev/null || true
           for f in raw/erro_*.log; do [ -s "$f" ] && cp "$f" relatorios/ || true; done

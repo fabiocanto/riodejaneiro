@@ -32,6 +32,17 @@ with sync_playwright() as p:
     pg.goto(base + '#busca'); pg.wait_for_timeout(300)
     campo = pg.locator('input').first; campo.fill('rua'); pg.wait_for_timeout(1200)
     assert pg.inner_text('#app').strip(), 'busca sem conteúdo'
+    pg.goto(base + '#prefeitura'); pg.wait_for_timeout(800)
+    texto_pref = pg.inner_text('#app')
+    assert 'Prefeitura' in texto_pref, 'seção Prefeitura sem conteúdo'
+    if 'Não foi possível carregar' not in texto_pref and 'Carregando' not in texto_pref:
+        links = pg.locator('#app details.box a[target=_blank]').count()
+        assert links > 0, 'seção Prefeitura sem links para fontes oficiais'
+        pg.click('#app a.back'); pg.wait_for_timeout(200)
+        assert pg.url == base or pg.url == base + '#', 'botão voltar da Prefeitura não volta à lista'
+    sw2 = pg.evaluate('document.documentElement.scrollWidth')
+    cw2 = pg.evaluate('document.documentElement.clientWidth')
+    assert sw2 <= cw2 + 1, 'rolagem horizontal na seção Prefeitura: scrollWidth=%d clientWidth=%d' % (sw2, cw2)
     b.close()
 srv.shutdown()
 erros = [e for e in erros if 'favicon' not in e]

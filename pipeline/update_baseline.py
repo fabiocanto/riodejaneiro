@@ -14,3 +14,10 @@ if os.path.exists(os.path.join(raw, 'canon.json')): W('canon.json', L('canon.jso
 if os.path.exists(os.path.join(raw, 'votos_cache.json')): W('votos_cache.json', L('votos_cache.json'))
 flag = os.path.join(base, 'ACEITAR_VOTOS')
 if os.path.exists(flag): os.remove(flag)  # o aceite vale para uma publicação só
+
+# Seção Prefeitura: só grava como "última versão boa" quando a coleta desta execução passou
+# na própria conferência (validate_prefeitura.py criou raw/prefeitura_ok). Caso contrário, o
+# baseline/ fica como estava, preservando os últimos dados bons da Prefeitura.
+if os.path.exists(os.path.join(raw, 'prefeitura_ok')):
+    for n in ('prefeitura_despesas.json', 'prefeitura_contratos.json', 'prefeitura_fontes.json'):
+        if os.path.exists(os.path.join(raw, n)): W(n, L(n))

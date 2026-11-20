@@ -30,6 +30,24 @@ def meses_sem(months, hoje):
     return juntar(partes) if len(partes) < 2 else ', '.join(partes[:-1]) + ', e ' + partes[-1]
 
 
+def prefeitura_data(raw, baseline):
+    """Monta data/prefeitura.json. Se a coleta desta execução não passou na conferência
+    (validate_prefeitura.py), usa a última versão boa gravada em baseline/ — a seção Prefeitura
+    nunca publica dado estranho, mesmo quando o resto do site publica normalmente."""
+    def ler(d, nome, padrao):
+        try:
+            return json.load(open(os.path.join(d, nome), encoding='utf-8'))
+        except FileNotFoundError:
+            return padrao
+    usar_raw = os.path.exists(os.path.join(raw, 'prefeitura_ok'))
+    fonte = raw if usar_raw else baseline
+    return {
+        'despesas': ler(fonte, 'prefeitura_despesas.json', {}),
+        'contratos': ler(fonte, 'prefeitura_contratos.json', {}),
+        'fontes': ler(fonte, 'prefeitura_fontes.json', {}),
+    }
+
+
 def main(raw, out, hoje):
     canon = json.load(open(os.path.join(os.path.dirname(__file__), '..', 'baseline', 'canon.json'), encoding='utf-8'))
     extra_path = os.path.join(os.path.dirname(__file__), '..', 'baseline', 'vereadores_extra.json')
@@ -83,6 +101,8 @@ def main(raw, out, hoje):
         json.dump(lists[i], open(os.path.join(out, 'data', 'v%d.json' % i), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
     json.dump(ind, open(os.path.join(out, 'data', 'ind.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
     json.dump(rep, open(os.path.join(out, 'data', 'rep.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
+    baseline_dir = os.path.join(os.path.dirname(__file__), '..', 'baseline')
+    json.dump(prefeitura_data(raw, baseline_dir), open(os.path.join(out, 'data', 'prefeitura.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
     open(os.path.join(out, '.nojekyll'), 'w').write('')
     open(os.path.join(out, 'CNAME'), 'w').write('carrapeta.com.br\n')
     open(os.path.join(out, 'robots.txt'), 'w').write(

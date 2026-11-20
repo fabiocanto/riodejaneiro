@@ -276,12 +276,64 @@ function contasHtml(){
  h+='<p class="muted" style="margin:12px 0 0">O <strong>Fundo Especial da Câmara (FECMRJ)</strong>, que é separado do orçamento normal, arrecadou R$&nbsp;39.514.222,86 em 2025 (quase tudo receita financeira) e terminou o ano com patrimônio líquido de R$&nbsp;165.348.992,47.</p>';
  h+='</div>';
  return h}
+function brM(v){if(v==null)return '—';var neg=v<0;v=Math.abs(v);var s;
+ if(v>=1e9)s='R$ '+(v/1e9).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+' bi';
+ else if(v>=1e6)s='R$ '+(v/1e6).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+' mi';
+ else if(v>=1e3)s='R$ '+(v/1e3).toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0})+' mil';
+ else s='R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+ return (neg?'-':'')+s}
+var PREF_MANDATOS=[
+ {titulo:'1º e início do 2º mandato — prefeito Eduardo Paes',anos:[2021,2022,2023,2024,2025],nota:null},
+ {titulo:'2026 — transição de prefeito',anos:[2026],nota:'Em 2026, Eduardo Paes governou até 20 de março; depois assumiu o vice, Eduardo Cavaliere. Os dados abertos da Prefeitura não separam o gasto por data dentro do ano, então o ano de 2026 aqui soma os dois mandatos.'}
+];
+function despesasAnoHtml(ano,desp,fonte){
+ var pares=Object.keys(desp||{}).map(function(k){return[k,desp[k]]}).sort(function(a,b){return b[1]-a[1]});
+ var total=pares.reduce(function(s,p){return s+p[1]},0);
+ var top=pares.slice(0,8),resto=pares.slice(8),restoSoma=resto.reduce(function(s,p){return s+p[1]},0);
+ var h='<div style="overflow-x:auto"><table style="font-size:.85rem"><thead><tr><th>Área (órgão) que gastou</th><th class="n">Pago em '+ano+'</th></tr></thead><tbody>';
+ top.forEach(function(p){h+='<tr><td>'+esc(nice(p[0]))+'</td><td class="n">'+A(fonte,brM(p[1]))+'</td></tr>'});
+ if(resto.length)h+='<tr><td>Outras '+resto.length+' áreas</td><td class="n">'+A(fonte,brM(restoSoma))+'</td></tr>';
+ h+='<tr><td><strong>Total pago em '+ano+'</strong></td><td class="n"><strong>'+A(fonte,brM(total))+'</strong></td></tr>';
+ h+='</tbody></table></div>';
+ return h}
+function contratosAnoHtml(ano,lista,fonte){
+ if(!lista||!lista.length)return '<p class="muted">Não há contratos registrados para '+ano+' nesta base.</p>';
+ var h='<div style="overflow-x:auto"><table style="font-size:.85rem"><thead><tr><th>Quem contratou</th><th>Para quem</th><th>Para quê</th><th class="n">Valor</th></tr></thead><tbody>';
+ lista.forEach(function(c){h+='<tr><td>'+esc(nice(c.orgao||''))+'</td><td>'+esc(nice(c.favorecido||''))+'</td><td>'+esc(c.objeto||'')+(c.situacao?' <span class="muted">('+esc(c.situacao)+')</span>':'')+'</td><td class="n">'+A(fonte,brM(c.valor))+'</td></tr>'});
+ h+='</tbody></table></div>';
+ return h}
+function prefeituraHtml(data){
+ var h='<a class="back" href="#">← Voltar à lista de vereadores</a><h2 style="margin-top:6px">A Prefeitura: orçamento e contratos</h2>';
+ h+='<div class="box"><p style="margin:0 0 8px">Esta seção mostra, ano a ano, <strong>quanto a Prefeitura do Rio pagou</strong> por área (como Saúde, Educação, Obras) e <strong>os maiores contratos</strong> que ela assinou com empresas e outras entidades. Os números vêm direto dos dados abertos da própria Prefeitura (Portal Contas Rio). Este site não dá nota, não compara prefeitos e não diz se o gasto foi bom ou ruim — só mostra o número, com um link para a fonte oficial em cada um.</p>';
+ h+='<p class="muted" style="margin:0">“Pago” é o que de fato saiu do caixa da Prefeitura, já descontado o que foi cancelado ou ainda não foi liberado.</p></div>';
+ PREF_MANDATOS.forEach(function(m){
+  h+='<h3 style="margin-top:18px">'+esc(m.titulo)+'</h3>';
+  if(m.nota)h+='<p class="muted" style="margin:0 0 8px">'+esc(m.nota)+'</p>';
+  m.anos.forEach(function(ano){
+   var a=String(ano),fd=(data.fontes&&data.fontes.despesas&&data.fontes.despesas[a])||'',fc=(data.fontes&&data.fontes.contratos)||'';
+   var temD=data.despesas&&data.despesas[a],temC=data.contratos&&data.contratos[a];
+   if(!temD&&!temC)return;
+   h+='<details class="box" style="margin:10px 0"><summary><strong>'+ano+'</strong></summary>';
+   if(temD){h+='<h4 style="margin:10px 0 6px">Quanto foi pago, por área</h4>'+despesasAnoHtml(ano,data.despesas[a],fd);}
+   if(temC){h+='<h4 style="margin:14px 0 6px">Maiores contratos assinados</h4><p class="muted" style="margin:0 0 6px;font-size:.82rem">Lista dos contratos de maior valor registrados neste ano, entre todos os contratos publicados pela Prefeitura.</p>'+contratosAnoHtml(ano,data.contratos[a],fc);}
+   h+='</details>';
+  });
+ });
+ h+='<p class="muted" style="margin-top:14px">Fonte oficial: <a href="https://riotransparente.rio.rj.gov.br/" target="_blank" rel="noopener">Portal Contas Rio</a>, dados abertos da Prefeitura do Rio de Janeiro.</p>';
+ return h}
+function loadPref(){if(!window.__pp)window.__pp=fetch('data/prefeitura.json').then(function(r){if(!r.ok)throw new Error(r.status);return r.json()});return window.__pp}
+function prefeitura(){
+ app.innerHTML='<a class="back" href="#">← Voltar à lista de vereadores</a><p class="muted">Carregando os dados da Prefeitura…</p>';
+ window.scrollTo(0,0);
+ loadPref().then(function(data){app.innerHTML=prefeituraHtml(data)}).catch(function(){
+  app.innerHTML='<a class="back" href="#">← Voltar à lista de vereadores</a><p class="muted">Não foi possível carregar os dados da Prefeitura agora. Tente de novo mais tarde.</p>'})}
 function home(){
  var cur=order.filter(isCurrent),old=order.filter(function(i){return!isCurrent(i)});
  var h='<div class="box"><h2>Como ler</h2><p style="margin:0 0 8px">Escolha um vereador na lista. Você verá três coisas, tiradas dos registros da Câmara:</p><ul style="margin:0 0 8px;padding-left:20px"><li><strong>Faltas</strong>: quantas vezes faltou às sessões, mês a mês.</li><li><strong>Propostas</strong>: o que apresentou, em palavras simples.</li><li><strong>Votos</strong>: como votou quando o voto de cada um foi registrado.</li></ul><p class="muted" style="margin:0">A ordem das listas é sempre alfabética. Este site não faz ranking nem avalia ninguém.</p></div>';
  h+=countersHtml();
  h+=contasHtml();
  h+='<a href="#busca" style="display:block;border:2px solid var(--ink);border-radius:16px;padding:16px;margin:14px 0;text-decoration:none;color:var(--ink);box-shadow:var(--shadow)"><strong style="font-family:var(--display)">Buscar por bairro ou rua →</strong><br><span class="muted">Veja tudo o que foi pedido para o seu bairro ou rua e por quem.</span></a>';
+ h+='<a href="#prefeitura" style="display:block;border:2px solid var(--ink);border-radius:16px;padding:16px;margin:14px 0;text-decoration:none;color:var(--ink);box-shadow:var(--shadow)"><strong style="font-family:var(--display)">Orçamento e contratos da Prefeitura →</strong><br><span class="muted">Quanto a Prefeitura pagou por área e os maiores contratos, ano a ano.</span></a>';
  h+='<label for="q"><strong>Procurar vereador</strong></label><div class="search"><span class="sic" aria-hidden="true">🔎</span><input id="q" type="search" placeholder="Digite o nome" autocomplete="off"></div>';
  var parties=[];cur.concat(old).forEach(function(i){var p=EXTRA[i]&&EXTRA[i].partido;if(p&&parties.indexOf(p)<0)parties.push(p)});
  parties.sort(function(a,b){return a.localeCompare(b,"pt")});
@@ -431,6 +483,7 @@ function searchView(prefill){
 function route(){var m=/^#v(\d+)$/.exec(location.hash),s=/^#busca:(.*)$/.exec(location.hash);
  if(location.hash==="#busca")searchView();
  else if(s)searchView(decodeURIComponent(s[1]));
+ else if(location.hash==="#prefeitura")prefeitura();
  else if(m&&NAMES[+m[1]])person(+m[1]);
  else home()}
 window.addEventListener("hashchange",route);route();
