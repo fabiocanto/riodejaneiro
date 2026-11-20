@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>De olho no Rio — o que cada vereador fez</title>
-<meta name="description" content="O que cada vereador do Rio de Janeiro fez desde {{PERIODO}}, direto dos registros oficiais da Câmara Municipal. Faltas, propostas e votações, com link para a fonte em cada número.">
+<title>De olho no Rio — Câmara e Prefeitura</title>
+<meta name="description" content="O que cada vereador do Rio de Janeiro fez desde {{PERIODO}} e para onde vai o orçamento da Prefeitura, direto dos registros oficiais. Faltas, propostas, votações, despesas e contratos, com link para a fonte em cada número.">
 <link rel="canonical" href="https://carrapeta.com.br/">
 <meta name="robots" content="index, follow">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
@@ -15,14 +15,14 @@
 <meta property="og:site_name" content="De olho no Rio">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:url" content="https://carrapeta.com.br/">
-<meta property="og:title" content="De olho no Rio — o que cada vereador fez">
-<meta property="og:description" content="O que cada vereador do Rio de Janeiro fez desde {{PERIODO}}, direto dos registros oficiais da Câmara. Dados oficiais, sem opinião.">
+<meta property="og:title" content="De olho no Rio — Câmara e Prefeitura">
+<meta property="og:description" content="O que cada vereador fez e para onde vai o orçamento da Prefeitura, direto dos registros oficiais. Dados oficiais, sem opinião.">
 <meta property="og:image" content="https://carrapeta.com.br/assets/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="De olho no Rio — o que cada vereador fez">
-<meta name="twitter:description" content="O que cada vereador do Rio de Janeiro fez desde {{PERIODO}}, direto dos registros oficiais da Câmara.">
+<meta name="twitter:title" content="De olho no Rio — Câmara e Prefeitura">
+<meta name="twitter:description" content="O que cada vereador fez e para onde vai o orçamento da Prefeitura, direto dos registros oficiais.">
 <meta name="twitter:image" content="https://carrapeta.com.br/assets/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -156,8 +156,8 @@ input.f{width:100%;font-size:1rem;padding:12px;border:1px solid var(--hair);bord
 <a class="skip" href="#app">Pular para o conteúdo</a>
 <header>
   <h1 class="brand">DE OLHO<br><em>NO RIO</em></h1>
-  <div class="live"><i></i>Dados oficiais da Câmara, coletados em {{DATA}}</div>
-  <p class="sub"><b>De olho na Câmara carioca.</b> O que cada vereador do Rio de Janeiro fez desde {{PERIODO}}, direto dos registros oficiais da Câmara. Cada número tem um link para a fonte.</p>
+  <div class="live"><i></i>Dados oficiais da Câmara e da Prefeitura, coletados em {{DATA}}</div>
+  <p class="sub"><b>De olho no Rio.</b> O que cada vereador fez desde {{PERIODO}} e para onde vai o orçamento da Prefeitura, direto dos registros oficiais. Cada número tem um link para a fonte.</p>
   <div class="meter">
     <span class="ml">Salário pago aos 51 vereadores desde a posse</span>
     <b class="mv num" id="tick">R$&nbsp;0,00</b>
@@ -167,7 +167,7 @@ input.f{width:100%;font-size:1rem;padding:12px;border:1px solid var(--hair);bord
 <div class="calcada" aria-hidden="true"></div>
 <main id="app" tabindex="-1"></main>
 <footer>
-  <p><strong>Sobre este site.</strong> Ele só reúne dados publicados pela Câmara em <a href="https://www.camara.rio">camara.rio</a>. Não dá nota, não compara vereadores e não opina. Pode haver erros de leitura: confira sempre no link oficial.</p>
+  <p><strong>Sobre este site.</strong> Ele só reúne dados publicados pela Câmara em <a href="https://www.camara.rio">camara.rio</a> e pela Prefeitura no <a href="https://riotransparente.rio.rj.gov.br/">Portal Contas Rio</a>. Não dá nota, não compara vereadores ou prefeitos e não opina. Pode haver erros de leitura: confira sempre no link oficial.</p>
   <p class="muted">Criado por Fábio Canto. O funcionamento deste site é baseado no <a href="https://radarptlandia.org/" target="_blank" rel="noopener">Radar PTlândia</a>, criado por <a href="https://www.instagram.com/eugabrieldamasceno" target="_blank" rel="noopener">eugabrieldamasceno</a> no Instagram.</p>
   <p class="muted" id="foot-notes"></p>
 </footer>
@@ -303,7 +303,7 @@ function contratosAnoHtml(ano,lista,fonte){
  h+='</tbody></table></div>';
  return h}
 function prefeituraHtml(data){
- var h='<a class="back" href="#">← Voltar à lista de vereadores</a><h2 style="margin-top:6px">A Prefeitura: orçamento e contratos</h2>';
+ var h='<a class="back" href="#">← Página inicial</a><h2 style="margin-top:6px">A Prefeitura: orçamento e contratos</h2>';
  h+='<div class="box"><p style="margin:0 0 8px">Esta seção mostra, ano a ano, <strong>quanto a Prefeitura do Rio pagou</strong> por área (como Saúde, Educação, Obras) e <strong>os maiores contratos</strong> que ela assinou com empresas e outras entidades. Os números vêm direto dos dados abertos da própria Prefeitura (Portal Contas Rio). Este site não dá nota, não compara prefeitos e não diz se o gasto foi bom ou ruim — só mostra o número, com um link para a fonte oficial em cada um.</p>';
  h+='<p class="muted" style="margin:0">“Pago” é o que de fato saiu do caixa da Prefeitura, já descontado o que foi cancelado ou ainda não foi liberado.</p></div>';
  PREF_MANDATOS.forEach(function(m){
@@ -323,13 +323,14 @@ function prefeituraHtml(data){
  return h}
 function loadPref(){if(!window.__pp)window.__pp=fetch('data/prefeitura.json').then(function(r){if(!r.ok)throw new Error(r.status);return r.json()});return window.__pp}
 function prefeitura(){
- app.innerHTML='<a class="back" href="#">← Voltar à lista de vereadores</a><p class="muted">Carregando os dados da Prefeitura…</p>';
+ app.innerHTML='<a class="back" href="#">← Página inicial</a><p class="muted">Carregando os dados da Prefeitura…</p>';
  window.scrollTo(0,0);
  loadPref().then(function(data){app.innerHTML=prefeituraHtml(data)}).catch(function(){
-  app.innerHTML='<a class="back" href="#">← Voltar à lista de vereadores</a><p class="muted">Não foi possível carregar os dados da Prefeitura agora. Tente de novo mais tarde.</p>'})}
-function home(){
+  app.innerHTML='<a class="back" href="#">← Página inicial</a><p class="muted">Não foi possível carregar os dados da Prefeitura agora. Tente de novo mais tarde.</p>'})}
+function camara(){
  var cur=order.filter(isCurrent),old=order.filter(function(i){return!isCurrent(i)});
- var h='<div class="box"><h2>Como ler</h2><p style="margin:0 0 8px">Escolha um vereador na lista. Você verá três coisas, tiradas dos registros da Câmara:</p><ul style="margin:0 0 8px;padding-left:20px"><li><strong>Faltas</strong>: quantas vezes faltou às sessões, mês a mês.</li><li><strong>Propostas</strong>: o que apresentou, em palavras simples.</li><li><strong>Votos</strong>: como votou quando o voto de cada um foi registrado.</li></ul><p class="muted" style="margin:0">A ordem das listas é sempre alfabética. Este site não faz ranking nem avalia ninguém.</p></div>';
+ var h='<a class="back" href="#">← Página inicial</a>';
+ h+='<div class="box"><h2>Como ler</h2><p style="margin:0 0 8px">Escolha um vereador na lista. Você verá três coisas, tiradas dos registros da Câmara:</p><ul style="margin:0 0 8px;padding-left:20px"><li><strong>Faltas</strong>: quantas vezes faltou às sessões, mês a mês.</li><li><strong>Propostas</strong>: o que apresentou, em palavras simples.</li><li><strong>Votos</strong>: como votou quando o voto de cada um foi registrado.</li></ul><p class="muted" style="margin:0">A ordem das listas é sempre alfabética. Este site não faz ranking nem avalia ninguém.</p></div>';
  h+=countersHtml();
  h+=contasHtml();
  h+='<a href="#busca" style="display:block;border:2px solid var(--ink);border-radius:16px;padding:16px;margin:14px 0;text-decoration:none;color:var(--ink);box-shadow:var(--shadow)"><strong style="font-family:var(--display)">Buscar por bairro ou rua →</strong><br><span class="muted">Veja tudo o que foi pedido para o seu bairro ou rua e por quem.</span></a>';
@@ -352,6 +353,27 @@ function home(){
  apply();
  document.getElementById("q").addEventListener("input",apply);
  pf.addEventListener("change",apply);
+ window.scrollTo(0,0);
+}
+function home(){
+ var h='<div class="box"><h2>De olho no Rio</h2><p style="margin:0">Dados oficiais sobre a cidade do Rio de Janeiro, direto da fonte, sem nota e sem opinião — só o número, com um link para conferir.</p></div>';
+ h+='<label for="qh"><strong>Buscar vereador, bairro ou rua</strong></label><div class="search"><span class="sic" aria-hidden="true">🔎</span><input id="qh" type="search" placeholder="Digite um nome, bairro ou rua" autocomplete="off"></div>';
+ h+='<div id="qh-res"></div>';
+ h+='<a href="#camara" style="display:block;border:2px solid var(--ink);border-radius:16px;padding:16px;margin:14px 0;text-decoration:none;color:var(--ink);box-shadow:var(--shadow)"><strong style="font-family:var(--display)">Câmara Municipal →</strong><br><span class="muted">O que cada vereador fez: faltas, propostas e votos, vereador por vereador.</span></a>';
+ h+='<a href="#prefeitura" style="display:block;border:2px solid var(--ink);border-radius:16px;padding:16px;margin:14px 0;text-decoration:none;color:var(--ink);box-shadow:var(--shadow)"><strong style="font-family:var(--display)">Prefeitura →</strong><br><span class="muted">Orçamento por área e os maiores contratos, ano a ano.</span></a>';
+ app.innerHTML=h;
+ var qh=document.getElementById('qh'),res=document.getElementById('qh-res');
+ function render(){
+  var raw=qh.value.trim(),q=norm(raw);
+  if(!q){res.innerHTML='';return}
+  var matches=order.filter(function(i){return norm(NAMES[i]).indexOf(q)>-1}).slice(0,8);
+  var h2='';
+  if(matches.length)h2+='<ul class="list">'+matches.map(function(i){return '<li><a href="#v'+i+'">'+ava(i,false)+'<span class="vname">'+esc(nice(NAMES[i]))+' '+pills(i)+'</span></a></li>'}).join('')+'</ul>';
+  h2+='<a href="#busca:'+encodeURIComponent(raw)+'" style="display:block;border:2px solid var(--ink);border-radius:16px;padding:14px;margin:10px 0;text-decoration:none;color:var(--ink)"><strong>Ver pedidos sobre “'+esc(raw)+'” no bairro ou rua →</strong></a>';
+  res.innerHTML=h2;
+ }
+ qh.addEventListener('input',render);
+ qh.addEventListener('keydown',function(e){if(e.key==='Enter'){var raw=qh.value.trim();if(raw)location.hash='#busca:'+encodeURIComponent(raw)}});
  window.scrollTo(0,0);
 }
 function exportUrl(m){return "https://www.camara.rio/includes_php/vereadores_frequencia_excel.php?ano="+m[0]+"&mes="+m[1]}
@@ -433,7 +455,7 @@ function contactBox(i){var e=EXTRA[i];if(!e)return '';var parts=[];
  return parts.length?'<p class="contact">'+parts.join(' · ')+'</p>':''}
 function person(i){
  var cur=isCurrent(i);
- var h='<a class="back" href="#">← Voltar à lista</a>';
+ var h='<a class="back" href="#camara">← Voltar à lista</a>';
  h+='<div class="vhead">'+ava(i,true)+'<div class="meta"><h2>'+esc(nice(NAMES[i]))+'</h2>'+pills(i)+contactBox(i)+'</div></div>';
  h+='<div class="tabs" role="tablist"><button class="tab" role="tab" data-t="p" aria-selected="true">Faltas</button><button class="tab" role="tab" data-t="r" aria-selected="false">Propostas</button><button class="tab" role="tab" data-t="v" aria-selected="false">Votos</button></div>';
  var sv=secVotes(i);
@@ -449,7 +471,7 @@ function loadSearch(){if(!window.__sp)window.__sp=Promise.all([fetch('data/ind.j
 function authors(ids){return ids.map(function(i){return esc(nice(NAMES[i]))}).join(", ")}
 function itemHtml(r){return '<div class="row"><div class="t">'+(r[1]?A(DOCB+'scpro.nsf/'+r[1]+'?OpenDocument',esc(r[0])):esc(r[0]))+' <span class="muted">· '+(r[3]||'sem data')+'</span><span class="pill">'+esc(CATN[r[5]])+'</span></div><div class="ement">'+esc(r[2])+'</div><div class="muted">Pedido por: '+authors(r[4])+'</div></div>'}
 function searchView(prefill){
- var h='<a class="back" href="#">← Voltar à lista de vereadores</a><h2 style="margin-top:6px">Buscar por bairro ou rua</h2>';
+ var h='<a class="back" href="#camara">← Voltar à lista de vereadores</a><h2 style="margin-top:6px">Buscar por bairro ou rua</h2>';
  h+='<div class="box" style="border-color:var(--c)"><strong>Leia antes.</strong> Pedido repetido não prova que a Prefeitura ignorou o pedido. Aqui só aparece o que os vereadores pediram e quando. A Câmara não publica nesta lista se o serviço foi feito, se a Prefeitura respondeu ou se o problema voltou depois de resolvido. Vários vereadores podem pedir a mesma coisa, e um mesmo vereador pode pedir de novo por causa de um problema novo ou de outro trecho da rua.</div>';
  h+='<label for="sq"><strong>Digite o bairro ou a rua</strong></label><input id="sq" class="f" type="search" placeholder="Ex.: Rocha Miranda, Rua dos Diamantes" autocomplete="off">';
  h+='<label for="sc" class="muted">Tipo de pedido</label><select id="sc" class="f"><option value="-1">Todos os tipos</option></select>';
@@ -484,6 +506,7 @@ function route(){var m=/^#v(\d+)$/.exec(location.hash),s=/^#busca:(.*)$/.exec(lo
  if(location.hash==="#busca")searchView();
  else if(s)searchView(decodeURIComponent(s[1]));
  else if(location.hash==="#prefeitura")prefeitura();
+ else if(location.hash==="#camara")camara();
  else if(m&&NAMES[+m[1]])person(+m[1]);
  else home()}
 window.addEventListener("hashchange",route);route();
