@@ -53,7 +53,12 @@ def _parse_data(s):
     if not s:
         return None
     try:
-        return email.utils.parsedate_to_datetime(s)
+        d = email.utils.parsedate_to_datetime(s)
+        # Alguns feeds publicam a data sem fuso explícito; parsedate_to_datetime então
+        # devolve um datetime "naive", que não pode ser comparado com um "aware" depois.
+        if d.tzinfo is None:
+            d = d.replace(tzinfo=datetime.timezone.utc)
+        return d
     except (TypeError, ValueError):
         pass
     for fmt in ('%Y-%m-%dT%H:%M:%S%z', '%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%d'):
