@@ -112,3 +112,13 @@ votos inicio 16:19:15
 votos ok 16:21:12
 prefeitura inicio 16:21:12
 validacao inicio 16:22:39
+inicio 16:44:48
+presenca inicio 16:44:48
+presenca ok 16:45:07
+props inicio 16:45:07
+props ok 17:10:02
+votos inicio 17:10:02
+votos ok 17:12:38
+prefeitura inicio 17:12:38
+prefeitura ok 17:16:04
+validacao inicio 17:16:04
