@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/runner/work/riodejaneiro/riodejaneiro/pipeline/collect_prefeitura.py", line 125, in <module>
+    main(sys.argv[1])
+  File "/home/runner/work/riodejaneiro/riodejaneiro/pipeline/collect_prefeitura.py", line 114, in main
+    desp, desp_linhas = coletar_despesas(sess)
+                        ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/riodejaneiro/riodejaneiro/pipeline/collect_prefeitura.py", line 62, in coletar_despesas
+    col_pago = _achar_coluna(campos, ('PAGO',))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/riodejaneiro/riodejaneiro/pipeline/collect_prefeitura.py", line 42, in _achar_coluna
+    raise RuntimeError('coluna ambígua/não encontrada para %s em %s (candidatos: %s)' % (precisa_ter, campos, cand))
+RuntimeError: coluna ambígua/não encontrada para ('PAGO',) em dict_keys(['Exercicio', 'Orgao', 'Descricao_Orgao', 'Unidade_Orcamentaria', 'Descricao_Unidade_Orcamentaria', 'Programa_de_Trabalho', 'Acao', 'Descricao_Acao', 'Fonte_de_Recursos', 'Descricao_Fonte', 'Elemento_Despesa', 'Descricao_Elemento', 'Item_Despesa', 'Descricao_item_Despesa', 'Orcamento_Inicial', 'Orcamento_Atualizado', 'Empenhado', 'Liquidado', 'Pago', 'Pago_Restos_Pagar']) (candidatos: ['Pago', 'Pago_Restos_Pagar'])

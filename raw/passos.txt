@@ -94,3 +94,12 @@ props ok 17:56:45
 votos inicio 17:56:45
 votos ok 18:01:24
 validacao inicio 18:01:24
+inicio 15:40:39
+presenca inicio 15:40:40
+presenca ok 15:40:58
+props inicio 15:40:58
+props ok 15:58:28
+votos inicio 15:58:28
+votos ok 16:00:48
+prefeitura inicio 16:00:48
+validacao inicio 16:01:10
