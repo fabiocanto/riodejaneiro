@@ -45,6 +45,27 @@ def _achar_coluna(campos, precisa_ter, *, prioriza=(), evita=()):
     return cand[0]
 
 
+def _achar_coluna_tentativas(campos, tentativas):
+    """Tenta várias combinações de palavras-chave em ordem (para quando o portal usa nomes de coluna
+    diferentes conforme o ano/portal — ex. 'Pago' no portal novo, 'Despesa_Paga' no portal antigo).
+    Usa a primeira tentativa que achar exatamente uma coluna; se nenhuma achar, levanta erro com todas
+    as tentativas (a coleta não deve adivinhar)."""
+    erros = []
+    for precisa_ter, extras in tentativas:
+        try:
+            return _achar_coluna(campos, precisa_ter, **extras)
+        except RuntimeError as e:
+            erros.append(str(e))
+    raise RuntimeError('nenhuma das colunas esperadas foi encontrada: ' + ' | '.join(erros))
+
+
+def _col_valor_pago(campos):
+    return _achar_coluna_tentativas(campos, [
+        (('PAGO',), {'evita': ('RESTOS',)}),        # portal novo (SIAFIC Carioca): Pago / Pago_Restos_Pagar
+        (('DESPESA', 'PAGA'), {}),                   # portal antigo: Despesa_Paga (distinto de Pagamento_RP)
+    ])
+
+
 def ler_csv(texto):
     amostra = texto[:4096]
     delim = ';' if amostra.count(';') > amostra.count(',') else ','
@@ -61,7 +82,7 @@ def coletar_despesas(sess):
             raise RuntimeError('Despesas %d: arquivo vazio (%s).' % (ano, url))
         campos = linhas[0].keys()
         col_org = _achar_coluna(campos, ('ORGAO',), prioriza=('DESCRICAO',))
-        col_pago = _achar_coluna(campos, ('PAGO',), evita=('RESTOS',))  # exclui "Pago_Restos_Pagar": é pagamento de obrigação de ano anterior, não o pago do próprio exercício
+        col_pago = _col_valor_pago(campos)
         soma = collections.Counter()
         ruim = 0
         for r in linhas:
