@@ -2,16 +2,6 @@
 
 **Resultado: APROVADA — o site será publicado**
 
-## Avisos
-- Votação 924d3687 (11/03/26, 924d3687): antes S/N/A=0/31/0 veto=False; agora 0/31/0 veto=True.
-- Votação caa0ea0a (10/13/26, caa0ea0a): antes S/N/A=31/0/0 veto=False; agora 31/2/0 veto=False.
-- Votação e0dbe448 (10/06/26, e0dbe448): antes S/N/A=15/0/0 veto=False; agora 15/0/0 veto=True.
-- Votação c6fd472d (09/02/26, c6fd472d): antes S/N/A=0/26/0 veto=True; agora 0/26/0 veto=False.
-- Votação 3b41a86c (09/02/26, 3b41a86c): antes S/N/A=0/27/0 veto=True; agora 0/27/0 veto=False.
-- Aceite único em vigor: divergência de votos contra a última versão boa foi aceita e vira a nova referência. ERRO ignorado: Votos: 440 votações (antes 508) — queda grande.
-- Aceite único em vigor: divergência de votos contra a última versão boa foi aceita e vira a nova referência. ERRO ignorado: Votos: 116 de 437 votações já publicadas vieram diferentes (26.5%); 71 sumiram.
-- Aceite único em vigor: divergência de votos contra a última versão boa foi aceita e vira a nova referência. ERRO ignorado: Votos: descartadas subiu de 10 para 43.
-
 ## Conferências
 - Presença: 17 meses com tabela, último = 2026-10 (51 vereadores).
 - Presença: 0 de 895 células de meses já publicados mudaram (0.0%).
@@ -19,3 +9,4 @@
 - Moções: 42568 lidas, maior número oficial 42570.
 - Votos: 4827 documentos de sessão listados de 2025 em diante.
 - Votos: 440 votações nominais, 43 descartadas (lista de nomes não bateu).
+- Votos: 0 de 440 votações já publicadas vieram diferentes (0.0%); 0 sumiram.
