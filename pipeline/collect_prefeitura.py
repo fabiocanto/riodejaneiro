@@ -26,13 +26,15 @@ def _num(s):
     except ValueError: return None
 
 
-def _achar_coluna(campos, precisa_ter, *, prioriza=()):
-    """Entre os cabeçalhos do CSV, acha o único que contém todas as palavras-chave (sem acento/maiúsculas).
+def _achar_coluna(campos, precisa_ter, *, prioriza=(), evita=()):
+    """Entre os cabeçalhos do CSV, acha o único que contém todas as palavras-chave (sem acento/maiúsculas)
+    e nenhuma das palavras de 'evita' (usado para excluir uma coluna parecida mas com outro significado,
+    como 'Pago_Restos_Pagar' quando se quer só 'Pago' do exercício).
     Levanta erro se achar zero ou mais de um candidato (coleta não deve adivinhar)."""
     cand = []
     for c in campos:
         cu = _sem_acento(c)
-        if all(p in cu for p in precisa_ter):
+        if all(p in cu for p in precisa_ter) and not any(e in cu for e in evita):
             cand.append(c)
     if len(cand) > 1:
         for pref in prioriza:
@@ -59,7 +61,7 @@ def coletar_despesas(sess):
             raise RuntimeError('Despesas %d: arquivo vazio (%s).' % (ano, url))
         campos = linhas[0].keys()
         col_org = _achar_coluna(campos, ('ORGAO',), prioriza=('DESCRICAO',))
-        col_pago = _achar_coluna(campos, ('PAGO',))
+        col_pago = _achar_coluna(campos, ('PAGO',), evita=('RESTOS',))  # exclui "Pago_Restos_Pagar": é pagamento de obrigação de ano anterior, não o pago do próprio exercício
         soma = collections.Counter()
         ruim = 0
         for r in linhas:
