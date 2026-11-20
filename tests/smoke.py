@@ -55,6 +55,21 @@ with sync_playwright() as p:
     sw2 = pg.evaluate('document.documentElement.scrollWidth')
     cw2 = pg.evaluate('document.documentElement.clientWidth')
     assert sw2 <= cw2 + 1, 'rolagem horizontal na seção Prefeitura: scrollWidth=%d clientWidth=%d' % (sw2, cw2)
+
+    # notícias nas laterais: só aparecem em telas largas; não devem causar rolagem horizontal
+    # nem em tela estreita (precisam ficar escondidas) nem em tela larga (com conteúdo real).
+    assert pg.locator('#rail-camara').count() == 1 and pg.locator('#rail-prefeitura').count() == 1
+    assert not pg.locator('#rail-camara').is_visible(), 'laterais de notícias visíveis em tela estreita'
+    pw = b.new_page(viewport={'width': 1400, 'height': 1000})
+    pw.on('pageerror', lambda e: erros.append(str(e)))
+    pw.on('response', lambda r: erros.append('HTTP %d %s' % (r.status, r.url)) if r.status >= 400 else None)
+    pw.goto(base); pw.wait_for_timeout(600)
+    assert pw.locator('#rail-camara').is_visible(), 'lateral da Câmara não aparece em tela larga'
+    assert pw.locator('#rail-prefeitura').is_visible(), 'lateral da Prefeitura não aparece em tela larga'
+    swl = pw.evaluate('document.documentElement.scrollWidth')
+    cwl = pw.evaluate('document.documentElement.clientWidth')
+    assert swl <= cwl + 1, 'rolagem horizontal em tela larga: scrollWidth=%d clientWidth=%d' % (swl, cwl)
+    pw.close()
     b.close()
 srv.shutdown()
 erros = [e for e in erros if 'favicon' not in e]

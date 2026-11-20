@@ -3,6 +3,7 @@ rodar: python -m pytest -q tests   (ou: python tests/test_parsers.py)"""
 import json, os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'pipeline'))
 import collect_presenca as P, collect_props as R, collect_votos as V
+import collect_noticias as N
 from common import norm_name
 
 CANON = json.load(open(os.path.join(os.path.dirname(__file__), '..', 'baseline', 'canon.json'), encoding='utf-8'))
@@ -68,6 +69,29 @@ def test_votacao():
     # veto
     assert V.parse_doc(DOC.replace('PROJETO DE LEI Nº 1277/2025.', 'VETO TOTAL APOSTO AO PROJETO'), IDX)['veto']
     assert V.codigo('Projeto De Decreto Legislativo 200/2026') == 'PDL 200/2026' and V.codigo(' Requerimento - Vereador X - ') == '?'
+
+
+def test_noticias():
+    rss = ('<?xml version="1.0"?><rss version="2.0"><channel>'
+           '<item><title>Câmara do Rio derruba 12 vetos da Prefeitura em sessão</title>'
+           '<link>https://diariodorio.com/a.html</link><pubDate>Wed, 18 Nov 2026 10:00:00 -0300</pubDate></item>'
+           '<item><title>Opinião: a política carioca em debate</title>'
+           '<link>https://diariodorio.com/opiniao/b.html</link><pubDate>Wed, 18 Nov 2026 09:00:00 -0300</pubDate></item>'
+           '<item><title>Vereador propõe nova lei de trânsito</title>'
+           '<link>https://diariodorio.com/c.html</link><pubDate>Wed, 18 Nov 2026 08:00:00 -0300</pubDate></item>'
+           '</channel></rss>')
+    itens = N._parse_feed(rss)
+    assert [t for t, _, _ in itens] == [
+        'Câmara do Rio derruba 12 vetos da Prefeitura em sessão',
+        'Opinião: a política carioca em debate',
+        'Vereador propõe nova lei de trânsito']
+    # item de opinião é descartado pela própria URL, mesmo citando Câmara/Prefeitura no título
+    assert N.PADRAO_OPINIAO.search('https://diariodorio.com/opiniao/b.html')
+    # título citando os dois: fica com quem aparece primeiro
+    assert N._categoria('Câmara do Rio derruba 12 vetos da Prefeitura em sessão') == 'camara'
+    assert N._categoria('Prefeitura do Rio pede aval à Câmara para obras') == 'prefeitura'
+    assert N._categoria('Vereador propõe nova lei de trânsito') == 'camara'
+    assert N._categoria('Chuva forte atinge o Rio nesta terça') is None  # nem um nem outro
 
 
 if __name__ == '__main__':

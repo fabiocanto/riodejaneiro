@@ -1,0 +1,93 @@
+name: Atualizar notícias
+
+# Duas vezes por dia (06:00 e 16:00 de Brasília = 09:00 e 19:00 UTC), atualiza só as notícias
+# das laterais (Câmara/vereadores à esquerda, Prefeitura/prefeitos à direita).
+# Não recoleta os dados pesados da Câmara (faltas/propostas/votações) nem os da Prefeitura —
+# usa a última versão boa deles (baseline/) e troca só a coleta de notícias.
+# Se a coleta de notícias vier incompleta ou estranha, ela NÃO é publicada: o site sai com as
+# últimas notícias boas e tudo mais segue igual.
+on:
+  schedule:
+    - cron: '0 9 * * *'    # 06:00 em Brasília
+    - cron: '0 19 * * *'   # 16:00 em Brasília
+  workflow_dispatch: {}
+
+permissions:
+  contents: write     # gravar baseline/noticias.json
+  pages: write
+  id-token: write
+
+concurrency:
+  group: atualizar-site   # mesmo grupo do workflow "Atualizar site": uma rodada pesada da
+                          # Câmara sempre tem prioridade sobre uma simples troca de notícias.
+  cancel-in-progress: false
+
+jobs:
+  noticias:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Instalar dependências
+        run: |
+          pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Testes dos leitores
+        run: python tests/test_parsers.py
+
+      - name: Preparar pasta de trabalho
+        run: mkdir -p raw
+
+      - name: Coletar notícias
+        continue-on-error: true   # problema aqui não deve travar o resto; a conferência decide
+        run: python pipeline/collect_noticias.py raw
+
+      - name: Conferir a coleta de notícias (trava de qualidade)
+        if: always()
+        continue-on-error: true   # reprovação aqui só mantém as últimas notícias boas
+        run: python pipeline/validate_noticias.py raw baseline raw/relatorio_noticias.md
+
+      - name: Mostrar relatório
+        if: always()
+        run: |
+          if [ -f raw/relatorio_noticias.md ]; then cat raw/relatorio_noticias.md >> "$GITHUB_STEP_SUMMARY"; fi
+
+      - name: Gerar o site (com as últimas notícias boas ou as novas, se aprovadas)
+        run: python pipeline/build.py raw _site
+
+      - name: Testar o site gerado num navegador
+        run: python tests/smoke.py _site
+
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Publicar
+        id: deploy
+        uses: actions/deploy-pages@v4
+
+      - name: Guardar notícias aprovadas como nova "última versão boa"
+        run: |
+          python pipeline/update_baseline.py raw baseline
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add baseline
+          if git diff --cached --quiet; then echo "sem mudanças"; else
+            git commit -m "Atualiza notícias ($(date -u +%FT%TZ)) [skip ci]"
+            git pull --rebase origin main || true
+            git push
+          fi

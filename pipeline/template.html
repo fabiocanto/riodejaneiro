@@ -48,7 +48,6 @@
   --l:#35d399;--l-t:#0f2e20;--o:#aab4bd;--o-t:#202a33;
   --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
  }
- .calcada{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='13'%3E%3Cpath d='M0,6.5 C10,-1 10,14 20,6.5 C30,-1 30,14 40,6.5' stroke='%23eef1f4' stroke-width='5' fill='none'/%3E%3C/svg%3E")}
 }
 body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.55 var(--body)}
 a{color:var(--b)}
@@ -63,8 +62,17 @@ h2{font-family:var(--display);font-size:1.4rem;margin:30px 0 8px;line-height:1.2
 h3{font-size:1.05rem;margin:20px 0 6px;font-weight:700}
 .sub{color:var(--ink);margin:0 0 16px;font-size:clamp(1.05rem,1.5vw + .8rem,1.22rem);line-height:1.45;max-width:46ch}
 .sub b{font-weight:800}
-.calcada{height:13px;margin:18px 0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='13'%3E%3Cpath d='M0,6.5 C10,-1 10,14 20,6.5 C30,-1 30,14 40,6.5' stroke='%230f1720' stroke-width='5' fill='none'/%3E%3C/svg%3E");background-repeat:repeat-x;background-size:40px 13px;opacity:.9}
-@media (max-width:420px){.calcada{background-size:30px 10px;height:10px}}
+.page-wrap{max-width:1180px;margin:0 auto;display:flex;gap:0;align-items:flex-start;justify-content:center}
+.rail{display:none;width:280px;flex:none;padding:28px 16px 0}
+.rail h2{font-family:var(--display);font-size:1rem;font-weight:800;margin:0 0 14px;text-transform:uppercase;letter-spacing:.02em;color:var(--mute)}
+.news{margin:0 0 18px;padding:0 0 18px;border-bottom:1px solid var(--hair)}
+.news:last-child{border-bottom:0}
+.news a{display:block;font-weight:700;color:var(--ink);text-decoration:none;line-height:1.35;margin:0 0 6px}
+.news a:hover{text-decoration:underline;color:var(--b)}
+.news .src{font-size:.82rem;color:var(--mute)}
+.center-col{max-width:720px;width:100%;flex:none}
+.center-col header,.center-col main,.center-col footer{max-width:720px;margin:0 auto;padding:0 18px}
+@media (min-width:1180px){.rail{display:block}}
 .muted{color:var(--mute);font-size:.92rem}
 .box{border:1px solid var(--hair);border-radius:16px;padding:14px 16px;margin:14px 0;background:var(--paper);box-shadow:var(--shadow)}
 .box h2,.box h3{margin-top:0}
@@ -154,6 +162,9 @@ input.f{width:100%;font-size:1rem;padding:12px;border:1px solid var(--hair);bord
 </head>
 <body>
 <a class="skip" href="#app">Pular para o conteúdo</a>
+<div class="page-wrap">
+<aside class="rail" id="rail-camara" aria-label="Notícias da Câmara"></aside>
+<div class="center-col">
 <header>
   <h1 class="brand">DE OLHO<br><em>NO RIO</em></h1>
   <div class="live"><i></i>Dados oficiais da Câmara e da Prefeitura, coletados em {{DATA}}</div>
@@ -164,13 +175,15 @@ input.f{width:100%;font-size:1rem;padding:12px;border:1px solid var(--hair);bord
     <span class="ms">e subindo agora · estimativa: 51 salários de R$ 19.127,52 por mês desde 1º de janeiro de 2025</span>
   </div>
 </header>
-<div class="calcada" aria-hidden="true"></div>
 <main id="app" tabindex="-1"></main>
 <footer>
   <p><strong>Sobre este site.</strong> Ele só reúne dados publicados pela Câmara em <a href="https://www.camara.rio">camara.rio</a> e pela Prefeitura no <a href="https://riotransparente.rio.rj.gov.br/">Portal Contas Rio</a>. Não dá nota, não compara vereadores ou prefeitos e não opina. Pode haver erros de leitura: confira sempre no link oficial.</p>
   <p class="muted">Criado por Fábio Canto. O funcionamento deste site é baseado no <a href="https://radarptlandia.org/" target="_blank" rel="noopener">Radar PTlândia</a>, criado por <a href="https://www.instagram.com/eugabrieldamasceno" target="_blank" rel="noopener">eugabrieldamasceno</a> no Instagram.</p>
   <p class="muted" id="foot-notes"></p>
 </footer>
+</div>
+<aside class="rail" id="rail-prefeitura" aria-label="Notícias da Prefeitura"></aside>
+</div>
 <script>
 /*DATA*/
 </script>
@@ -322,6 +335,18 @@ function prefeituraHtml(data){
  h+='<p class="muted" style="margin-top:14px">Fonte oficial: <a href="https://riotransparente.rio.rj.gov.br/" target="_blank" rel="noopener">Portal Contas Rio</a>, dados abertos da Prefeitura do Rio de Janeiro.</p>';
  return h}
 function loadPref(){if(!window.__pp)window.__pp=fetch('data/prefeitura.json').then(function(r){if(!r.ok)throw new Error(r.status);return r.json()});return window.__pp}
+function fmtDataISO(s){var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(s||'');return m?m[3]+'/'+m[2]+'/'+m[1]:''}
+function noticiaItemHtml(n){return '<div class="news"><a href="'+esc(n.url)+'" target="_blank" rel="noopener">'+esc(n.titulo)+'</a><div class="src">'+esc(n.fonte)+(n.data?' · '+esc(fmtDataISO(n.data)):'')+'</div></div>'}
+function montaRail(el,titulo,itens){
+ if(!itens||!itens.length){el.innerHTML='';return}
+ el.innerHTML='<h2>'+titulo+'</h2>'+itens.map(noticiaItemHtml).join('')
+}
+function loadNoticias(){
+ fetch('data/noticias.json').then(function(r){if(!r.ok)throw new Error(r.status);return r.json()}).then(function(data){
+  montaRail(document.getElementById('rail-camara'),'Notícias da Câmara',data.camara)
+  montaRail(document.getElementById('rail-prefeitura'),'Notícias da Prefeitura',data.prefeitura)
+ }).catch(function(){})
+}
 function prefeitura(){
  app.innerHTML='<a class="back" href="#">← Página inicial</a><p class="muted">Carregando os dados da Prefeitura…</p>';
  window.scrollTo(0,0);
@@ -509,7 +534,7 @@ function route(){var m=/^#v(\d+)$/.exec(location.hash),s=/^#busca:(.*)$/.exec(lo
  else if(location.hash==="#camara")camara();
  else if(m&&NAMES[+m[1]])person(+m[1]);
  else home()}
-window.addEventListener("hashchange",route);route();
+window.addEventListener("hashchange",route);route();loadNoticias();
 document.getElementById("foot-notes").innerHTML="Fontes: "+A(URL_FREQ,"frequência")+" · "+A(URL_VOT,"discursos e votações")+" · "+A(PL+"pl","processo legislativo")+". Atualizado em {{DATA}}.";
 })();
 </script>

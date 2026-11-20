@@ -1,6 +1,8 @@
 """Gera o site (pasta de saída) a partir dos dados coletados.
 uso: python build.py RAW_DIR OUT_DIR [--data dd/mm/aaaa]
-RAW_DIR contém: presenca.json, props.json, votos.json   (+ baseline/canon.json)"""
+RAW_DIR normalmente contém: presenca.json, props.json, votos.json (+ baseline/canon.json).
+Quando algum desses arquivos não existir em RAW_DIR (ex.: uma rodada que só atualiza as
+notícias, sem recoletar a Câmara), usa a última versão boa em baseline/ no lugar."""
 import json, os, re, sys, datetime
 sys.path.insert(0, os.path.dirname(__file__))
 import build_data as B
@@ -30,6 +32,28 @@ def meses_sem(months, hoje):
     return juntar(partes) if len(partes) < 2 else ', '.join(partes[:-1]) + ', e ' + partes[-1]
 
 
+def _ler_com_fallback(raw, baseline, nome):
+    """Lê NOME de raw/; se esta execução não coletou o arquivo (ex.: rodada só de notícias,
+    que não refaz a coleta pesada da Câmara), usa a última versão boa em baseline/."""
+    caminho_raw = os.path.join(raw, nome)
+    d = raw if os.path.exists(caminho_raw) else baseline
+    return json.load(open(os.path.join(d, nome), encoding='utf-8'))
+
+
+def noticias_data(raw, baseline):
+    """Monta data/noticias.json. Mesma regra da Prefeitura: só usa a coleta desta execução se ela
+    passou na conferência (validate_noticias.py); senão, ficam as últimas notícias boas."""
+    def ler(d, nome, padrao):
+        try:
+            return json.load(open(os.path.join(d, nome), encoding='utf-8'))
+        except FileNotFoundError:
+            return padrao
+    usar_raw = os.path.exists(os.path.join(raw, 'noticias_ok'))
+    fonte = raw if usar_raw else baseline
+    dados = ler(fonte, 'noticias.json', {})
+    return {'camara': dados.get('camara') or [], 'prefeitura': dados.get('prefeitura') or []}
+
+
 def prefeitura_data(raw, baseline):
     """Monta data/prefeitura.json. Se a coleta desta execução não passou na conferência
     (validate_prefeitura.py), usa a última versão boa gravada em baseline/ — a seção Prefeitura
@@ -49,13 +73,17 @@ def prefeitura_data(raw, baseline):
 
 
 def main(raw, out, hoje):
-    canon = json.load(open(os.path.join(os.path.dirname(__file__), '..', 'baseline', 'canon.json'), encoding='utf-8'))
-    extra_path = os.path.join(os.path.dirname(__file__), '..', 'baseline', 'vereadores_extra.json')
+    baseline_dir = os.path.join(os.path.dirname(__file__), '..', 'baseline')
+    canon = json.load(open(os.path.join(baseline_dir, 'canon.json'), encoding='utf-8'))
+    extra_path = os.path.join(baseline_dir, 'vereadores_extra.json')
     extra_raw = json.load(open(extra_path, encoding='utf-8')) if os.path.exists(extra_path) else []
     extra_by_idx = {e['idx']: e for e in extra_raw}
-    pres = json.load(open(os.path.join(raw, 'presenca.json'), encoding='utf-8'))
-    rows = json.load(open(os.path.join(raw, 'props.json'), encoding='utf-8'))
-    votos = json.load(open(os.path.join(raw, 'votos.json'), encoding='utf-8'))
+    # presenca/props/votos: usa a coleta desta execução quando ela rodou (execução normal da
+    # Câmara); numa rodada mais leve que só atualiza as notícias (sem recoletar a Câmara), usa a
+    # última versão boa em baseline/ para montar o site todo mesmo assim.
+    pres = _ler_com_fallback(raw, baseline_dir, 'presenca.json')
+    rows = _ler_com_fallback(raw, baseline_dir, 'props.json')
+    votos = _ler_com_fallback(raw, baseline_dir, 'votos.json')
     n = len(canon)
     idx = {norm_name(c): i for i, c in enumerate(canon)}
     cidx = {}
@@ -101,8 +129,8 @@ def main(raw, out, hoje):
         json.dump(lists[i], open(os.path.join(out, 'data', 'v%d.json' % i), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
     json.dump(ind, open(os.path.join(out, 'data', 'ind.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
     json.dump(rep, open(os.path.join(out, 'data', 'rep.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
-    baseline_dir = os.path.join(os.path.dirname(__file__), '..', 'baseline')
     json.dump(prefeitura_data(raw, baseline_dir), open(os.path.join(out, 'data', 'prefeitura.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
+    json.dump(noticias_data(raw, baseline_dir), open(os.path.join(out, 'data', 'noticias.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
     open(os.path.join(out, '.nojekyll'), 'w').write('')
     open(os.path.join(out, 'CNAME'), 'w').write('carrapeta.com.br\n')
     open(os.path.join(out, 'robots.txt'), 'w').write(
