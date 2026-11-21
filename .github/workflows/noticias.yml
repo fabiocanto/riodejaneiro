@@ -8,8 +8,11 @@ name: Atualizar notícias
 # últimas notícias boas e tudo mais segue igual.
 on:
   schedule:
-    - cron: '0 9 * * *'    # 06:00 em Brasília
-    - cron: '0 19 * * *'   # 16:00 em Brasília
+    # O GitHub avisa que horários exatos (minuto 0) sofrem mais atraso/risco de não disparar,
+    # por ser quando mais workflows de todo mundo tentam rodar ao mesmo tempo — por isso alguns
+    # minutos depois da hora cheia.
+    - cron: '7 9 * * *'    # ~06:07 em Brasília
+    - cron: '7 19 * * *'   # ~16:07 em Brasília
   workflow_dispatch: {}
 
 permissions:
