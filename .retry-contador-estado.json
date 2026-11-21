@@ -27,6 +27,13 @@
       "timestamp_utc": "2026-11-21T20:46:17Z",
       "resultado": "falha",
       "causa": "ConnectTimeoutError ao conectar em www.camara.rio:443 (connect timeout=10) ao baixar vereadores_frequencia_excel.php?ano=2025&mes=1; diagnostico informativo tambem reportou Connection reset by peer em www.camara.rio e aplicnt.camara.rj.gov.br, e ausencia de certificado TLS valido para ambos os hosts no pacote ca-camara.pem"
+    },
+    {
+      "numero": 5,
+      "run_id": "44953253912",
+      "timestamp_utc": "2026-11-21T21:56:08Z",
+      "resultado": "falha",
+      "causa": "ConnectTimeoutError ao conectar em www.camara.rio:443 (connect timeout=10) ao baixar vereadores_frequencia_excel.php?ano=2025&mes=1 (RuntimeError apos esgotar retries em pipeline/common.py:get)"
     }
   ]
 }
