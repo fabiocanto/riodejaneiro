@@ -1,0 +1,11 @@
+{
+  "tentativas": [
+    {
+      "numero": 1,
+      "run_id": "44931807082",
+      "timestamp_utc": "2026-11-21T17:54:30Z",
+      "resultado": "falha",
+      "causa": "ConnectTimeoutError ao conectar em www.camara.rio:443 (connect timeout=10) ao baixar vereadores_frequencia_excel.php"
+    }
+  ]
+}
