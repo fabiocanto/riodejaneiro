@@ -149,6 +149,13 @@ def coletar(s, agora=None):
 
 def main(raw_dir):
     s = sessao()
+    # Alguns portais de notícias (diferente dos sites oficiais) bloqueiam com HTTP 403
+    # um User-Agent que se identifica como leitor automático de dados públicos — tratam
+    # como bot. Para esses feeds, um User-Agent de navegador comum é o padrão normal de
+    # qualquer leitor de RSS e não muda o que é lido (só o título/link/data, já públicos).
+    s.headers['User-Agent'] = (
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+        '(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36')
     candidatos, erros = coletar(s)
     candidatos.sort(key=lambda c: c['_ord'], reverse=True)
     for c in candidatos:
