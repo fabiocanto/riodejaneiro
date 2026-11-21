@@ -1,8 +1,11 @@
-"""Coleta notícias factuais sobre a Câmara/vereadores e sobre a Prefeitura/prefeitos, a partir
-de feeds RSS/Atom de fontes jornalísticas confiáveis e dos próprios sites oficiais.
+"""Coleta notícias factuais sobre a Câmara/vereadores, a Prefeitura/prefeitos e o governo
+federal, a partir de feeds RSS/Atom de fontes jornalísticas confiáveis e dos próprios sites
+oficiais. Notícia de Câmara e de Prefeitura tem prioridade nas laterais correspondentes;
+notícia de governo federal (e o excedente de Câmara/Prefeitura além do limite por lado) serve
+só pra completar o lado que tiver menos notícia, já que notícia específica de vereador é rara.
 Nunca inventa ou resume nada: só título, fonte e link, exatamente como publicado.
 Exclui colunas de opinião pela própria URL (ex.: /opiniao/, /coluna/) e qualquer item que não
-bata claramente com as palavras-chave de Câmara ou de Prefeitura.
+bata claramente com as palavras-chave de Câmara, Prefeitura ou governo federal.
 uso: python collect_noticias.py RAW_DIR"""
 import datetime
 import email.utils
@@ -39,6 +42,14 @@ PADRAO_CAMARA = re.compile(
     re.I)
 PADRAO_PREFEITURA = re.compile(
     r'\bprefeito(a)?\b|\bprefeitura\b|\bsecretari[ao]\s+municipal\b|\bpaços?\s+municipal\b',
+    re.I)
+# Governo federal — usado só pra completar as laterais quando sobra pouca notícia específica
+# de Câmara/Prefeitura (Fábio pediu pra distribuir notícia da cidade e do governo, municipal
+# e federal, entre os dois lados, já que notícia só de vereador é rara nas fontes disponíveis).
+PADRAO_FEDERAL = re.compile(
+    r'\bpresidente\s+da\s+rep[úu]blica\b|\bplanalto\b|\bcongresso\s+nacional\b'
+    r'|\bsenado\s+federal\b|\bc[âa]mara\s+dos\s+deputados\b|\bminist[ée]rio\b|\bministr[oa]\b'
+    r'|\bgoverno\s+federal\b',
     re.I)
 
 MAX_POR_LADO = 5
@@ -97,18 +108,18 @@ def _parse_feed(texto):
 
 
 def _categoria(titulo):
-    """Quando o título menciona só um dos dois, a resposta é óbvia. Quando menciona os dois
-    (ex.: 'Câmara do Rio derruba 12 vetos da Prefeitura'), o assunto principal costuma vir
-    primeiro no título — então fica com quem aparece antes."""
-    m_c = PADRAO_CAMARA.search(titulo)
-    m_p = PADRAO_PREFEITURA.search(titulo)
-    if m_c and not m_p:
-        return 'camara'
-    if m_p and not m_c:
-        return 'prefeitura'
-    if m_c and m_p:
-        return 'camara' if m_c.start() < m_p.start() else 'prefeitura'
-    return None  # não relacionado a nenhum dos dois — não entra
+    """Quando o título menciona só um dos três assuntos (Câmara, Prefeitura, governo federal),
+    a resposta é óbvia. Quando menciona mais de um (ex.: 'Câmara do Rio derruba 12 vetos da
+    Prefeitura'), o assunto principal costuma vir primeiro no título — então fica com quem
+    aparece antes."""
+    candidatos = [(m.start(), cat) for m, cat in (
+        (PADRAO_CAMARA.search(titulo), 'camara'),
+        (PADRAO_PREFEITURA.search(titulo), 'prefeitura'),
+        (PADRAO_FEDERAL.search(titulo), 'federal'),
+    ) if m]
+    if not candidatos:
+        return None  # não relacionado a nenhum dos três — não entra
+    return min(candidatos)[1]
 
 
 def coletar(s, agora=None):
@@ -158,10 +169,36 @@ def main(raw_dir):
         '(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36')
     candidatos, erros = coletar(s)
     candidatos.sort(key=lambda c: c['_ord'], reverse=True)
+
+    por_cat = {'camara': [], 'prefeitura': [], 'federal': []}
     for c in candidatos:
+        por_cat[c['categoria']].append(c)
+
+    camara = por_cat['camara'][:MAX_POR_LADO]
+    prefeitura = por_cat['prefeitura'][:MAX_POR_LADO]
+
+    # O que sobra (notícia de governo federal, mais o excedente de Câmara/Prefeitura além do
+    # limite de cada lado) serve pra completar o lado que ficar com menos notícia — distribuindo
+    # entre os dois em vez de deixar um lado vazio e o outro parado em 5.
+    sobra = por_cat['camara'][MAX_POR_LADO:] + por_cat['prefeitura'][MAX_POR_LADO:] + por_cat['federal']
+    sobra.sort(key=lambda c: c['_ord'], reverse=True)
+    vistos_urls = {c['url'] for c in camara + prefeitura}
+    for c in sobra:
+        if c['url'] in vistos_urls:
+            continue
+        if len(camara) < MAX_POR_LADO and len(camara) <= len(prefeitura):
+            camara.append(c)
+        elif len(prefeitura) < MAX_POR_LADO:
+            prefeitura.append(c)
+        elif len(camara) < MAX_POR_LADO:
+            camara.append(c)
+        else:
+            continue
+        vistos_urls.add(c['url'])
+
+    for c in camara + prefeitura:
         del c['_ord']
-    camara = [c for c in candidatos if c['categoria'] == 'camara'][:MAX_POR_LADO]
-    prefeitura = [c for c in candidatos if c['categoria'] == 'prefeitura'][:MAX_POR_LADO]
+
     saida = {
         'camara': camara,
         'prefeitura': prefeitura,

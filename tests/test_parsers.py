@@ -1,6 +1,6 @@
 """Testes dos leitores com trechos no formato real das páginas oficiais.
 rodar: python -m pytest -q tests   (ou: python tests/test_parsers.py)"""
-import json, os, sys
+import datetime, json, os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'pipeline'))
 import collect_presenca as P, collect_props as R, collect_votos as V
 import collect_noticias as N
@@ -92,6 +92,54 @@ def test_noticias():
     assert N._categoria('Prefeitura do Rio pede aval à Câmara para obras') == 'prefeitura'
     assert N._categoria('Vereador propõe nova lei de trânsito') == 'camara'
     assert N._categoria('Chuva forte atinge o Rio nesta terça') is None  # nem um nem outro
+    # governo federal: terceira categoria, usada só pra completar as laterais
+    assert N._categoria('Planalto anuncia novo pacote de medidas') == 'federal'
+    assert N._categoria('Ministério libera verba para obras no Rio') == 'federal'
+    # citando Câmara/Prefeitura E governo federal: continua valendo quem aparece primeiro
+    assert N._categoria('Governo federal e Prefeitura discutem repasse') == 'federal'
+
+
+def test_distribuicao_noticias(tmp_path=None):
+    """Com poucas notícias específicas de Câmara, o excedente de Prefeitura e as de governo
+    federal completam o lado que ficou menor, sem repetir URL e sem estourar MAX_POR_LADO."""
+    base = datetime.datetime(2026, 11, 20, tzinfo=datetime.timezone.utc)
+
+    def item(i, cat, minutos_atras):
+        return {
+            'titulo': 't%d' % i, 'url': 'https://g1.globo.com/n%d.html' % i,
+            'fonte': 'G1 Rio de Janeiro', 'data': '2026-11-20', 'categoria': cat,
+            '_ord': base - datetime.timedelta(minutes=minutos_atras),
+        }
+
+    candidatos = (
+        [item(0, 'camara', 0)] +
+        [item(i, 'prefeitura', i) for i in range(1, 8)] +
+        [item(i, 'federal', i) for i in range(8, 12)]
+    )
+    candidatos.sort(key=lambda c: c['_ord'], reverse=True)
+    por_cat = {'camara': [], 'prefeitura': [], 'federal': []}
+    for c in candidatos:
+        por_cat[c['categoria']].append(c)
+    camara = por_cat['camara'][:N.MAX_POR_LADO]
+    prefeitura = por_cat['prefeitura'][:N.MAX_POR_LADO]
+    sobra = por_cat['camara'][N.MAX_POR_LADO:] + por_cat['prefeitura'][N.MAX_POR_LADO:] + por_cat['federal']
+    sobra.sort(key=lambda c: c['_ord'], reverse=True)
+    vistos = {c['url'] for c in camara + prefeitura}
+    for c in sobra:
+        if c['url'] in vistos:
+            continue
+        if len(camara) < N.MAX_POR_LADO and len(camara) <= len(prefeitura):
+            camara.append(c)
+        elif len(prefeitura) < N.MAX_POR_LADO:
+            prefeitura.append(c)
+        elif len(camara) < N.MAX_POR_LADO:
+            camara.append(c)
+        else:
+            continue
+        vistos.add(c['url'])
+    assert len(camara) == N.MAX_POR_LADO, camara
+    assert len(prefeitura) == N.MAX_POR_LADO, prefeitura
+    assert len({c['url'] for c in camara + prefeitura}) == 2 * N.MAX_POR_LADO  # sem repetição
 
 
 if __name__ == '__main__':
