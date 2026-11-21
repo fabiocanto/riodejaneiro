@@ -9,7 +9,7 @@ import sys
 
 from collect_noticias import FONTES, PADRAO_OPINIAO
 
-MIN_ITENS = 3     # abaixo disso, a seção não publica (dado incompleto demais pra confiar)
+MIN_ITENS = 1     # abaixo disso, a seção não publica (dado incompleto demais pra confiar)
 ALVO_ITENS = 5    # quantidade-alvo por lado
 
 
