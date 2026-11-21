@@ -169,3 +169,5 @@ prefeitura inicio 00:58:45
 prefeitura ok 01:01:01
 validacao inicio 01:01:01
 validacao ok 01:01:01
+inicio 12:29:14
+presenca inicio 12:29:14
