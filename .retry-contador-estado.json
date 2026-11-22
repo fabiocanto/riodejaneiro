@@ -1,0 +1,1 @@
+{"tentativas":[{"numero":1,"run_id":"44982101783","timestamp_utc":"2026-11-22T03:49:24Z","resultado":"falha","causa":"Connection timeout ao conectar em www.camara.rio (connect timeout=10s) ao baixar vereadores_frequencia_excel.php na etapa 'Coletar presença'"}]}
