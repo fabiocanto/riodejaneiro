@@ -6,6 +6,13 @@
       "timestamp_utc": "2026-11-22T12:46:14Z",
       "resultado": "falha",
       "causa": "Connection reset by peer (curl 35) em www.camara.rio (vereadores_frequencia_excel.php) e aplicnt.camara.rj.gov.br (scpro.nsf LeiInt), na etapa 'Coletar presença'. HTTP 000 (sem resposta)."
+    },
+    {
+      "tentativa": 2,
+      "run_id": 45029156414,
+      "timestamp_utc": "2026-11-22T13:45:28Z",
+      "resultado": "falha",
+      "causa": "Connection reset by peer (curl 35) em www.camara.rio (vereadores_frequencia_excel.php) e aplicnt.camara.rj.gov.br (scpro.nsf LeiInt), na etapa 'Coletar presença'. HTTP 000 (sem resposta). Sem certificado detectado para ambos os hosts."
     }
   ]
 }
