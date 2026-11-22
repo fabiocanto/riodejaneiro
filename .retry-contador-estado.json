@@ -1,1 +1,18 @@
-{"tentativas":[{"numero":1,"run_id":"44982101783","timestamp_utc":"2026-11-22T03:49:24Z","resultado":"falha","causa":"Connection timeout ao conectar em www.camara.rio (connect timeout=10s) ao baixar vereadores_frequencia_excel.php na etapa 'Coletar presença'"}]}
+{
+  "tentativas": [
+    {
+      "numero": 1,
+      "run_id": "44982101783",
+      "timestamp_utc": "2026-11-22T03:49:24Z",
+      "resultado": "falha",
+      "causa": "Connection timeout ao conectar em www.camara.rio (connect timeout=10s) ao baixar vereadores_frequencia_excel.php na etapa 'Coletar presença'"
+    },
+    {
+      "numero": 2,
+      "run_id": "44986471195",
+      "timestamp_utc": "2026-11-22T04:45:49Z",
+      "resultado": "falha",
+      "causa": "Connection reset by peer / connect timeout em www.camara.rio e aplicnt.camara.rj.gov.br na etapa 'Coletar presença'; erro final: ConnectTimeoutError ao baixar vereadores_frequencia_excel.php (connect timeout=10s)"
+    }
+  ]
+}
