@@ -20,6 +20,13 @@
       "timestamp_utc": "2026-11-22T05:46:24Z",
       "resultado": "falha",
       "causa": "Connection reset by peer ao baixar https://www.camara.rio/includes_php/vereadores_frequencia_excel.php (ConnectionResetError 104) na etapa 'Coletar presença'; diagnóstico também apontou reset em aplicnt.camara.rj.gov.br/APL/Legislativos/scpro.nsf/Internet/LeiInt"
+    },
+    {
+      "numero": 4,
+      "run_id": "44995262645",
+      "timestamp_utc": "2026-11-22T06:46:48Z",
+      "resultado": "falha",
+      "causa": "Connection reset by peer / connect timeout em www.camara.rio e aplicnt.camara.rj.gov.br; erro final na etapa 'Coletar presença': ConnectTimeoutError ao baixar vereadores_frequencia_excel.php?ano=2025&mes=1 (connect timeout=10s). Diagnóstico informativo também mostrou 'Recv failure: Connection reset by peer' em ambos os domínios da Câmara, e aviso de 'sem certificado' para www.camara.rio e aplicnt.camara.rj.gov.br"
     }
   ]
 }
