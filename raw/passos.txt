@@ -205,3 +205,5 @@ inicio 05:47:22
 presenca inicio 05:47:22
 inicio 06:47:40
 presenca inicio 06:47:40
+inicio 07:46:28
+presenca inicio 07:46:28
