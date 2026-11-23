@@ -1,34 +1,35 @@
 {
  "total_por_lista": {
-  "LeiInt": 2780,
+  "LeiInt": 2781,
   "LeiCompInt": 135,
   "EmendaInt": 8,
   "DecretoInt": 207,
-  "ResolucaoInt": 8,
-  "IndInt": 12224,
+  "ResolucaoInt": 9,
+  "IndInt": 12232,
   "mocaoInt": 42570,
-  "ReqInfInt": 1209,
-  "ReqInt": 1567
+  "ReqInfInt": 1217,
+  "ReqInt": 1568
  },
  "sem_autor_conhecido": {
   "LeiInt": 11,
   "LeiCompInt": 11,
   "EmendaInt": 3,
   "DecretoInt": 8,
+  "ResolucaoInt": 1,
   "IndInt": 26,
   "mocaoInt": 2,
   "ReqInfInt": 16,
-  "ReqInt": 8
+  "ReqInt": 9
  },
  "autores_nao_mapeados": {
   "MESA DIRETORA": 73,
   "PODER EXECUTIVO": 22,
-  "COMISSAO DE CONSTITUICAO JUSTICA E REDACAO": 19,
+  "COMISSAO DE CONSTITUICAO JUSTICA E REDACAO": 20,
   "COMISSAO DE OBRAS PUBLICAS E INFRAESTRUTURA": 17,
   "COMISSAO DE FINANCAS ORCAMENTO E FISCALIZACAO FINANCEIRA": 11,
   "PASTOR DEANGELES PERCY": 11,
+  "COMISSAO DE EDUCACAO": 9,
   "COMISSAO DE HIGIENE SAUDE PUBLICA E BEM-ESTAR SOCIAL": 9,
-  "COMISSAO DE EDUCACAO": 8,
   "COMISSAO DE ADMINISTRACAO PUBLICA E ASSUNTOS LIGADOS AO SERVIDOR PUBLICO": 6,
   "COMISSAO DE JUSTICA E REDACAO": 5,
   "RAFAEL ALOISIO FREITAS E VEREADOR PAULO MESSINA": 5,
@@ -62,5 +63,5 @@
   "ALEXANDRE ARRAES": 1,
   "LEONEL BRIZOLA": 1
  },
- "linhas_gravadas": 60623
+ "linhas_gravadas": 60640
 }
