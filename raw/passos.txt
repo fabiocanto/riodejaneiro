@@ -243,3 +243,14 @@ prefeitura inicio 19:47:32
 prefeitura ok 19:50:27
 validacao inicio 19:50:27
 validacao ok 19:50:28
+inicio 20:06:41
+presenca inicio 20:06:41
+presenca ok 20:06:50
+props inicio 20:06:50
+props ok 20:12:03
+votos inicio 20:12:03
+votos ok 20:12:19
+prefeitura inicio 20:12:19
+prefeitura ok 20:15:31
+validacao inicio 20:15:32
+validacao ok 20:15:32
