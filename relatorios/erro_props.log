@@ -1,0 +1,29 @@
+Traceback (most recent call last):
+  File "/home/runner/work/riodejaneiro/riodejaneiro/pipeline/collect_props.py", line 78, in <module>
+    main(*sys.argv[1:4])
+  File "/home/runner/work/riodejaneiro/riodejaneiro/pipeline/collect_props.py", line 59, in main
+    res = list(ex.map(lambda p: coletar_view(p[0], p[1], sess), enumerate(VIEWS)))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/concurrent/futures/_base.py", line 619, in result_iterator
+    yield _result_or_cancel(fs.pop())
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/concurrent/futures/_base.py", line 317, in _result_or_cancel
+    return fut.result(timeout)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/concurrent/futures/_base.py", line 456, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/riodejaneiro/riodejaneiro/pipeline/collect_props.py", line 59, in <lambda>
+    res = list(ex.map(lambda p: coletar_view(p[0], p[1], sess), enumerate(VIEWS)))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/riodejaneiro/riodejaneiro/pipeline/collect_props.py", line 43, in coletar_view
+    pg = parse_page(get(sess, '%sscpro.nsf/Internet/%s?OpenForm&Start=%d&Count=%d' % (APL, nome, start, PAGE)), vi)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/riodejaneiro/riodejaneiro/pipeline/common.py", line 29, in get
+    raise RuntimeError('falha ao baixar %s: %s' % (url, last))
+RuntimeError: falha ao baixar https://aplicnt.camara.rj.gov.br/APL/Legislativos/scpro.nsf/Internet/mocaoInt?OpenForm&Start=37501&Count=500: HTTPSConnectionPool(host='aplicnt.camara.rj.gov.br', port=443): Max retries exceeded with url: /APL/Legislativos/scpro.nsf/Internet/mocaoInt?OpenForm&Start=37501&Count=500 (Caused by ResponseError('too many 502 error responses'))
