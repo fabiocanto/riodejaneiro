@@ -6,9 +6,9 @@
   "DecretoInt": 207,
   "ResolucaoInt": 9,
   "IndInt": 12232,
-  "mocaoInt": 42570,
+  "mocaoInt": 42588,
   "ReqInfInt": 1217,
-  "ReqInt": 1568
+  "ReqInt": 1570
  },
  "sem_autor_conhecido": {
   "LeiInt": 11,
@@ -43,7 +43,6 @@
   "COMISSAO DE SEGURANCA E ORDEM PUBLICA": 2,
   "COMISSAO DE PREVENCAO AS DROGAS": 2,
   "COMISSAO DE SEGURANCA PUBLICA": 2,
-  "TAITANA ROQUE": 1,
   "COMISSAO DE EDUCACAO. VEREADOR JUNIOR DA LUCINHA": 1,
   "COMISSAO DE CIENCIA TECNOLOGIA COMUNICACAO E INFORMATICA": 1,
   "COMISSAO DE RELACOES INTERNACIONAIS": 1,
@@ -61,7 +60,8 @@
   "LICIA CANINE - RUCA": 1,
   "SERGIO CABRAL": 1,
   "ALEXANDRE ARRAES": 1,
-  "LEONEL BRIZOLA": 1
+  "LEONEL BRIZOLA": 1,
+  "MARCELO ARAR": 1
  },
- "linhas_gravadas": 60640
+ "linhas_gravadas": 60660
 }
