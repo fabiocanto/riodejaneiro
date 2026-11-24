@@ -538,14 +538,21 @@ function route(){var m=/^#v(\d+)$/.exec(location.hash),s=/^#busca:(.*)$/.exec(lo
 window.addEventListener("hashchange",route);route();loadNoticias();
 document.getElementById("foot-notes").innerHTML="Fontes: "+A(URL_FREQ,"frequência")+" · "+A(URL_VOT,"discursos e votações")+" · "+A(PL+"pl","processo legislativo")+". Atualizado em {{DATA}}.";
 })();
-// Contador de acessos (GoatCounter, sem dado pessoal). Se o serviço estiver fora do ar ou o
-// pedido falhar, o número simplesmente não aparece — não afeta o resto do site.
-fetch('https://carrapeta.goatcounter.com/counter/TOTAL.json').then(function(r){
- if(!r.ok)throw new Error(r.status);return r.json()
-}).then(function(d){
- var n=parseInt(String(d.count).replace(/\D/g,''),10);
- if(!isNaN(n))document.getElementById('visit-count').textContent=n.toLocaleString('pt-BR')+' acessos ao todo.'
-}).catch(function(){})
+// Contador de acessos (GoatCounter, sem dado pessoal). O endpoint de contagem não manda
+// cabeçalho de CORS, então fetch() por JavaScript não funciona entre domínios — por isso
+// usamos uma <img>, que não precisa de CORS pra só ser exibida. Se o serviço estiver fora
+// do ar, a imagem simplesmente não carrega (onerror remove o elemento) — não afeta o site.
+(function(){
+ var p=document.getElementById('visit-count');
+ if(!p)return;
+ var img=document.createElement('img');
+ img.src='https://carrapeta.goatcounter.com/counter/TOTAL.svg';
+ img.alt='Contador de acessos ao todo';
+ img.style.height='1.1em';
+ img.style.verticalAlign='middle';
+ img.onerror=function(){p.remove()};
+ p.appendChild(img);
+})();
 </script>
 <script data-goatcounter="https://carrapeta.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
