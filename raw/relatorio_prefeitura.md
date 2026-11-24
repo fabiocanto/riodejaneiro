@@ -1,17 +1,21 @@
 # Relatório — seção Prefeitura
 
-**Resultado: APROVADA — seção publicada**
+**Resultado: REPROVADA — seção Prefeitura não publicada; resto do site segue normal**
 
-## Conferências
-- Prefeitura/Despesas 2021: R$ 27915483375 pagos, 91 secretarias/órgãos.
-- Prefeitura/Despesas 2022: R$ 33695983134 pagos, 89 secretarias/órgãos.
-- Prefeitura/Despesas 2023: R$ 38571254903 pagos, 88 secretarias/órgãos.
-- Prefeitura/Despesas 2024: R$ 42608991180 pagos, 60 secretarias/órgãos.
-- Prefeitura/Despesas 2025: R$ 42405259873 pagos, 65 secretarias/órgãos.
-- Prefeitura/Despesas 2026: R$ 39027463750 pagos, 65 secretarias/órgãos.
-- Prefeitura/Contratos 2021: 15 contratos no topo (maior: R$ 2110805928).
-- Prefeitura/Contratos 2022: 15 contratos no topo (maior: R$ 926895820).
-- Prefeitura/Contratos 2023: 15 contratos no topo (maior: R$ 5753200548).
-- Prefeitura/Contratos 2024: 15 contratos no topo (maior: R$ 704235754).
-- Prefeitura/Contratos 2025: 15 contratos no topo (maior: R$ 597198656).
-- Prefeitura/Contratos 2026: 15 contratos no topo (maior: R$ 787714200).
+## Erros (bloqueiam a publicação da seção)
+- Prefeitura/Despesas: nenhum dado coletado.
+- Prefeitura/Despesas 2021: ano ausente na coleta.
+- Prefeitura/Despesas 2022: ano ausente na coleta.
+- Prefeitura/Despesas 2023: ano ausente na coleta.
+- Prefeitura/Despesas 2024: ano ausente na coleta.
+- Prefeitura/Despesas 2025: ano ausente na coleta.
+- Prefeitura/Despesas 2026: ano ausente na coleta.
+- Prefeitura/Contratos: nenhum dado coletado.
+
+## Avisos
+- Prefeitura/Contratos 2021: nenhum contrato no topo da lista.
+- Prefeitura/Contratos 2022: nenhum contrato no topo da lista.
+- Prefeitura/Contratos 2023: nenhum contrato no topo da lista.
+- Prefeitura/Contratos 2024: nenhum contrato no topo da lista.
+- Prefeitura/Contratos 2025: nenhum contrato no topo da lista.
+- Prefeitura/Contratos 2026: nenhum contrato no topo da lista.
