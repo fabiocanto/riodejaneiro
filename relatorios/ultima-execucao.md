@@ -9,4 +9,4 @@
 - Moções: 42586 lidas, maior número oficial 42588.
 - Votos: 4842 documentos de sessão listados de 2025 em diante.
 - Votos: 449 votações nominais, 43 descartadas (lista de nomes não bateu).
-- Votos: 0 de 440 votações já publicadas vieram diferentes (0.0%); 0 sumiram.
+- Votos: 0 de 449 votações já publicadas vieram diferentes (0.0%); 0 sumiram.
