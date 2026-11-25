@@ -258,3 +258,14 @@ inicio 20:45:51
 presenca inicio 20:45:51
 presenca ok 20:46:00
 props inicio 20:46:00
+inicio 18:51:02
+presenca inicio 18:51:02
+presenca ok 18:51:11
+props inicio 18:51:11
+props ok 19:06:02
+votos inicio 19:06:02
+votos ok 19:06:19
+prefeitura inicio 19:06:19
+prefeitura ok 19:09:27
+validacao inicio 19:09:27
+validacao ok 19:09:27
