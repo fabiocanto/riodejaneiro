@@ -5,10 +5,10 @@
   "EmendaInt": 8,
   "DecretoInt": 207,
   "ResolucaoInt": 9,
-  "IndInt": 12275,
-  "mocaoInt": 42879,
+  "IndInt": 12299,
+  "mocaoInt": 43005,
   "ReqInfInt": 1220,
-  "ReqInt": 1590
+  "ReqInt": 1592
  },
  "sem_autor_conhecido": {
   "LeiInt": 11,
@@ -63,5 +63,5 @@
   "LEONEL BRIZOLA": 1,
   "MARCELO ARAR": 1
  },
- "linhas_gravadas": 61017
+ "linhas_gravadas": 61169
 }
