@@ -26,4 +26,4 @@ Traceback (most recent call last):
                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "/home/runner/work/riodejaneiro/riodejaneiro/pipeline/common.py", line 29, in get
     raise RuntimeError('falha ao baixar %s: %s' % (url, last))
-RuntimeError: falha ao baixar https://aplicnt.camara.rj.gov.br/APL/Legislativos/scpro.nsf/Internet/mocaoInt?OpenForm&Start=37501&Count=500: HTTPSConnectionPool(host='aplicnt.camara.rj.gov.br', port=443): Max retries exceeded with url: /APL/Legislativos/scpro.nsf/Internet/mocaoInt?OpenForm&Start=37501&Count=500 (Caused by ResponseError('too many 502 error responses'))
+RuntimeError: falha ao baixar https://aplicnt.camara.rj.gov.br/APL/Legislativos/scpro.nsf/Internet/IndInt?OpenForm&Start=1001&Count=500: HTTPSConnectionPool(host='aplicnt.camara.rj.gov.br', port=443): Max retries exceeded with url: /APL/Legislativos/scpro.nsf/Internet/IndInt?OpenForm&Start=1001&Count=500 (Caused by ReadTimeoutError("HTTPSConnectionPool(host='aplicnt.camara.rj.gov.br', port=443): Read timed out. (read timeout=45)"))
